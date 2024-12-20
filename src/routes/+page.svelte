@@ -45,7 +45,7 @@
 
 	.background {
 		width: 100vw;
-		height: 100vh;
+		height: 100svh;
 		position: fixed;
 		top: 0;
 		left: 0;
@@ -54,7 +54,7 @@
 	}
 
     header {
-        min-height: 100vh;
+        min-height: 100svh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -105,7 +105,7 @@
 	}
 
     footer {
-        min-height: 80vh;
+        min-height: 80svh;
     }
 
 	@keyframes upAndDown {
