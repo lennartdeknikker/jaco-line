@@ -9,8 +9,9 @@
 <img class="background" src="/images/jaco-line.jpg" alt="jaco-line" />
 <header>
 	<h2>Save the date!</h2>
-	<h3>20/21/22-12-‘24</h3>
-	<img class="header-image" src="/images/december-darlings.jpg" alt="kopjes van klei" />
+	<h3>zondag 7 september 2025</h3>
+	<img class="header-image" src="/images/kunstpark.jpg" alt="kopjes van klei" />
+	<h4>Kunstpark Open Air in het Westdampark in Woerden</h4>
     <button aria-label="scroll down" on:click={scrollToPhotos}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
 	</button>
@@ -78,8 +79,10 @@
 	}
 
     header img {
-        max-width: 400px;
-        width: 100%;
+        /* max-width: min(1200px, 100%); */
+        /* width: 100%; */
+		height: 60vh;
+		max-height: 65vw;
     }
 
 	.photos {
@@ -94,7 +97,8 @@
     }
 
 	h2,
-	h3 {
+	h3,
+	h4 {
 		text-align: center;
 		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 	}
