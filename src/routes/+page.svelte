@@ -8,14 +8,17 @@
 
 <img class="background" src="/images/jaco-line.jpg" alt="jaco-line" />
 <header>
-	<h2>Save the date!</h2>
-	<h3>zondag 7 september 2025</h3>
+	<h2>zondag 7 september 2025</h2>
 	<img class="header-image" src="/images/kunstpark.jpg" alt="kopjes van klei" />
 	<h4>Kunstpark Open Air in het Westdampark in Woerden</h4>
     <button aria-label="scroll down" on:click={scrollToPhotos}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
 	</button>
 </header>
+
+<a href="https://www.instagram.com/jacoline_keramiek" class="instagram-link">
+	<img src="/icons/instagram.webp" alt="instagram logo" />
+</a>
 
 <div class="photos" id="photos">
 	<img class="photo" src="/images/foto1.jpg" alt="kopjes van klei" />
@@ -84,6 +87,25 @@
 		height: 60vh;
 		max-height: 65vw;
     }
+
+	.instagram-link {
+		position: fixed;
+		top: 1em;
+		right: 1em;
+		height: 50px;
+		width: 50px;
+		filter: blur(10);
+	}
+
+	.instagram-link img {
+		width: 100%;
+		/* fun filter */
+		filter: drop-shadow(0 0 8px #e1306c) brightness(1.2) contrast(1.2) saturate(1.8);
+		transition: filter 0.3s;
+	}
+	.instagram-link img:hover {
+		filter: drop-shadow(0 0 16px #e1306c) brightness(1.4) contrast(1.4) saturate(2.2) blur(1px);
+	}
 
 	.photos {
 		max-width: 940px;
