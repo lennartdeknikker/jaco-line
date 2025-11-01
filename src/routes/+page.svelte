@@ -8,9 +8,9 @@
 
 <img class="background" src="/images/jaco-line.jpg" alt="jaco-line" />
 <header>
-	<h2>zondag 7 september 2025</h2>
-	<img class="header-image" src="/images/kunstpark.jpg" alt="kopjes van klei" />
-	<h4>Kunstpark Open Air in het Westdampark in Woerden</h4>
+	<h2>vrijdag 14 november 2025</h2>
+	<img class="header-image" src="/images/cosy-christmas.jpg" alt="kopjes van klei" />
+	<h4>Cosy Christmas in de Bosrand in Woerden</h4>
     <button aria-label="scroll down" on:click={scrollToPhotos}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
 	</button>
