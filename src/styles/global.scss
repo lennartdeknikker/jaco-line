@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables' as *;
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
@@ -92,4 +92,5 @@ img {
 	white-space: nowrap;
 	border-width: 0;
 }
+
 

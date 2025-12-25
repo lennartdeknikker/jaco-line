@@ -170,7 +170,7 @@
 {/if}
 
 <style lang="scss">
-	@import '../../styles/variables';
+	@use '../../styles/variables' as *;
 
 	.page-header {
 		background: linear-gradient(135deg, $color-accent 0%, $color-secondary 100%);

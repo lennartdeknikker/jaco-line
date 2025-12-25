@@ -39,3 +39,4 @@ export interface NewsletterSubscriber {
 	createdAt: string;
 }
 
+

@@ -35,7 +35,7 @@
 </footer>
 
 <style lang="scss">
-	@import '../../styles/variables';
+	@use '../../styles/variables' as *;
 
 	.footer {
 		background: $color-background-alt;
@@ -95,4 +95,5 @@
 		font-size: $font-size-small;
 	}
 </style>
+
 

@@ -52,3 +52,4 @@ Your Payload CMS should expose these endpoints:
 
 See `payload.config.ts` for detailed collection structure reference.
 
+

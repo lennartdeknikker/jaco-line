@@ -26,7 +26,7 @@
 
 <style lang="scss">
 	@use 'sass:color';
-	@import '../../styles/variables';
+	@use '../../styles/variables' as *;
 
 	.button {
 		display: inline-block;
