@@ -1,148 +1,223 @@
-<script>
-	const scrollToPhotos = () => {
-		const photos = typeof document !== undefined && document.getElementById('photos');
-		if (!photos) return;
-		photos.scrollIntoView({ behavior: 'smooth' });
-	};
+<script lang="ts">
+	import type { PageData } from './$types';
+	import Button from '$lib/components/Button.svelte';
+
+	export let data: PageData;
 </script>
 
-<img class="background" src="/images/jaco-line.jpg" alt="jaco-line" />
-<header>
-	<h2>vrijdag 14 november 2025</h2>
-	<img class="header-image" src="/images/cosy-christmas.jpg" alt="kopjes van klei" />
-	<h4>Cosy Christmas in de Bosrand in Woerden</h4>
-    <button aria-label="scroll down" on:click={scrollToPhotos}>
-		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 9 6 6 6-6"/></svg>
-	</button>
-</header>
+<svelte:head>
+	<title>Jaco Line - Handgemaakt Keramiek</title>
+	<meta name="description" content="Ontdek handgemaakt keramiek van Jaco Line. Bezoek onze marktkraam op verschillende evenementen." />
+</svelte:head>
 
-<a href="https://www.instagram.com/jacoline_keramiek" class="instagram-link">
-	<img src="/icons/instagram.webp" alt="instagram logo" />
-</a>
+<section class="hero">
+	<div class="container">
+		<div class="hero-content">
+			<h1>Jaco Line</h1>
+			<p class="subtitle">Handgemaakt keramiek met passie en aandacht voor detail</p>
+			<div class="hero-actions">
+				<Button href="/evenementen" variant="primary">Bekijk evenementen</Button>
+				<Button href="/galerij" variant="secondary">Bekijk werk</Button>
+			</div>
+		</div>
+	</div>
+</section>
 
-<div class="photos" id="photos">
-	<img class="photo" src="/images/foto1.jpg" alt="kopjes van klei" />
-	<img class="photo" src="/images/foto4.jpg" alt="espresso kopjes" />
-	<img class="photo" src="/images/foto2.jpg" alt="capuccino mok" />
-	<img class="photo" src="/images/akoestival.jpg" alt="kopjes van klei" />
-	<img class="photo" src="/images/kraam.jpg" alt="espresso kopjes" />
-	<img class="photo" src="/images/foto3.jpg" alt="espresso kopjes" />
-</div>
+<section class="featured-events">
+	<div class="container">
+		<h2>Komende evenementen</h2>
+		{#if data.events.length > 0}
+			<div class="events-grid">
+				{#each data.events as event}
+					<article class="event-card">
+						<div class="event-date">
+							<span class="day">{new Date(event.date).getDate()}</span>
+							<span class="month">{new Date(event.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+						</div>
+						<div class="event-content">
+							<h3>{event.title}</h3>
+							<p class="event-location">{event.location}</p>
+							<p class="event-description">{event.description}</p>
+						</div>
+					</article>
+				{/each}
+			</div>
+			<div class="section-actions">
+				<Button href="/evenementen">Alle evenementen</Button>
+			</div>
+		{:else}
+			<p>Binnenkort meer evenementen!</p>
+		{/if}
+	</div>
+</section>
 
-<footer></footer>
+<section class="featured-gallery">
+	<div class="container">
+		<h2>Bekijk mijn werk</h2>
+		{#if data.images.length > 0}
+			<div class="gallery-grid">
+				{#each data.images as image}
+					<a href="/galerij" class="gallery-item">
+						<img src={image.image?.url || '/images/foto1.jpg'} alt={image.alt || 'Keramiek werk'} />
+					</a>
+				{/each}
+			</div>
+			<div class="section-actions">
+				<Button href="/galerij">Bekijk volledige galerij</Button>
+			</div>
+		{:else}
+			<div class="gallery-grid">
+				<img src="/images/foto1.jpg" alt="Keramiek werk" />
+				<img src="/images/foto2.jpg" alt="Keramiek werk" />
+				<img src="/images/foto3.jpg" alt="Keramiek werk" />
+			</div>
+		{/if}
+	</div>
+</section>
 
-<style>
-	:global(body) {
-		font-family: 'Poppins', serif;
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		padding: 0 24px 14px;
-		color: white;
-	}
+<style lang="scss">
+	@import '../styles/variables';
 
-	:global(svg) {
-		width: 1em;
-		height: 1em;
-	}
-
-	.background {
-		width: 100vw;
-		height: 100svh;
-		position: fixed;
-		top: 0;
-		left: 0;
-		z-index: -1;
-		object-fit: cover;
-	}
-
-    header {
-        min-height: 100svh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        max-width: 940px;
-    }
-
-	header button {
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		font-size: 2rem;
-		color: white;
-		width: 100%;
-		margin-top: 24px;
-	}
-
-	header button svg {
-		animation: upAndDown 2s infinite;
-	}
-
-    header img {
-        /* max-width: min(1200px, 100%); */
-        /* width: 100%; */
-		height: 60vh;
-		max-height: 65vw;
-    }
-
-	.instagram-link {
-		position: fixed;
-		top: 1em;
-		right: 1em;
-		height: 50px;
-		width: 50px;
-		filter: blur(10);
-	}
-
-	.instagram-link img {
-		width: 100%;
-		/* fun filter */
-		filter: drop-shadow(0 0 8px #e1306c) brightness(1.2) contrast(1.2) saturate(1.8);
-		transition: filter 0.3s;
-	}
-	.instagram-link img:hover {
-		filter: drop-shadow(0 0 16px #e1306c) brightness(1.4) contrast(1.4) saturate(2.2) blur(1px);
-	}
-
-	.photos {
-		max-width: 940px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-    h2 {
-        margin-top: 0;
-    }
-
-	h2,
-	h3,
-	h4 {
+	.hero {
+		background: linear-gradient(135deg, $color-accent 0%, $color-secondary 100%);
+		padding: $spacing-3xl 0;
 		text-align: center;
-		text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+
+		@media (max-width: $breakpoint-md) {
+			padding: $spacing-2xl 0;
+		}
 	}
 
-	.photo {
-		max-width: 100%;
+	.hero-content {
+		max-width: 800px;
 		margin: 0 auto;
 	}
 
-    footer {
-        min-height: 80svh;
-    }
+	.hero h1 {
+		font-size: 3.5rem;
+		margin-bottom: $spacing-md;
+		color: $color-text;
 
-	@keyframes upAndDown {
-		0% {
-			transform: translateY(0) scale(1); 
-		}
-		50% {
-			transform: translateY(10px) scale(1.4);
-		}
-		100% {
-			transform: translateY(0) scale(1);
+		@media (max-width: $breakpoint-md) {
+			font-size: 2.5rem;
 		}
 	}
+
+	.subtitle {
+		font-size: $font-size-large;
+		margin-bottom: $spacing-xl;
+		color: $color-text-light;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: $spacing-md;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.featured-events,
+	.featured-gallery {
+		padding: $spacing-3xl 0;
+
+		@media (max-width: $breakpoint-md) {
+			padding: $spacing-2xl 0;
+		}
+	}
+
+	.featured-events h2,
+	.featured-gallery h2 {
+		text-align: center;
+		margin-bottom: $spacing-xl;
+	}
+
+	.events-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: $spacing-lg;
+		margin-bottom: $spacing-xl;
+	}
+
+	.event-card {
+		display: flex;
+		gap: $spacing-md;
+		padding: $spacing-lg;
+		background: $color-background-alt;
+		border-radius: $border-radius-lg;
+		border: 1px solid $color-border;
+		transition: transform $transition-base, box-shadow $transition-base;
+
+		&:hover {
+			transform: translateY(-4px);
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+		}
+	}
+
+	.event-date {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		min-width: 80px;
+		background: $color-primary;
+		color: white;
+		border-radius: $border-radius-md;
+		padding: $spacing-sm;
+
+		.day {
+			font-size: 2rem;
+			font-weight: $font-weight-bold;
+			line-height: 1;
+		}
+
+		.month {
+			font-size: $font-size-small;
+			text-transform: uppercase;
+		}
+	}
+
+	.event-content {
+		flex: 1;
+	}
+
+	.event-location {
+		color: $color-text-light;
+		font-size: $font-size-small;
+		margin-bottom: $spacing-xs;
+	}
+
+	.event-description {
+		color: $color-text-light;
+		font-size: $font-size-small;
+		margin-top: $spacing-xs;
+	}
+
+	.gallery-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: $spacing-md;
+		margin-bottom: $spacing-xl;
+	}
+
+	.gallery-item {
+		overflow: hidden;
+		border-radius: $border-radius-lg;
+		aspect-ratio: 1;
+		transition: transform $transition-base;
+
+		&:hover {
+			transform: scale(1.05);
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.section-actions {
+		text-align: center;
+	}
 </style>
+
