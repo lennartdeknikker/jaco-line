@@ -1,6 +1,6 @@
 # Jaco Line - Pottery Website
 
-A statically rendered SvelteKit website for Jaco Line pottery, integrated with Payload CMS.
+A statically rendered SvelteKit website for Jaco Line pottery, integrated with Sanity CMS.
 
 ## Features
 
@@ -13,7 +13,7 @@ A statically rendered SvelteKit website for Jaco Line pottery, integrated with P
 ## Tech Stack
 
 - **SvelteKit** (latest version) - Framework
-- **Payload CMS** - Content Management System
+- **Sanity CMS** - Content Management System
 - **TypeScript** - Type safety
 - **SCSS** - Styling with theme variables
 - **ESLint** - Code linting
@@ -25,7 +25,7 @@ A statically rendered SvelteKit website for Jaco Line pottery, integrated with P
 ### Prerequisites
 
 - Node.js 18+
-- Payload CMS instance (see [PAYLOAD_SETUP.md](./PAYLOAD_SETUP.md) for setup instructions)
+- A Sanity account (free tier available at https://sanity.io)
 
 ### Installation
 
@@ -34,24 +34,42 @@ A statically rendered SvelteKit website for Jaco Line pottery, integrated with P
 pnpm install
 ```
 
-2. Set up environment variables:
+2. Set up Sanity project:
+   - Go to https://www.sanity.io and create a free account
+   - Create a new project (or use existing)
+   - Note your Project ID and Dataset name
+
+3. Set up environment variables:
 ```bash
-cp .env.example .env
+# Create .env file
+cat > .env << EOF
+SANITY_PROJECT_ID=your-project-id-here
+SANITY_DATASET=production
+SANITY_API_TOKEN=your-api-token-here
+EOF
 ```
 
-Edit `.env` and configure:
-- `PAYLOAD_URL` - Your Payload CMS API URL (e.g., `http://localhost:3000`)
+Or manually create `.env` with:
+- `SANITY_PROJECT_ID` - Your Sanity project ID
+- `SANITY_DATASET` - Usually "production" (or "development")
+- `SANITY_API_TOKEN` - Create a token in Sanity Studio → API → Tokens
 
-3. Connect to Payload CMS:
-   - Update load functions in `src/routes/*/+page.ts` to fetch from your Payload CMS instance
-   - See comments in the load functions for integration examples
+4. Set up Sanity schemas:
+   - See `src/lib/sanity.schema.ts` for schema definitions
+   - Add these schemas to your Sanity Studio project
+   - Or use Sanity's cloud studio at https://your-project-id.sanity.studio
 
-4. Start the development server:
+5. Start the development server:
 ```bash
 pnpm run dev
 ```
 
 The site will be available at `http://localhost:5173`
+
+6. Access Sanity Studio:
+   - Cloud Studio: https://your-project-id.sanity.studio
+   - Or set up local studio: `npx sanity init`
+   - Start adding content!
 
 ### Building for Production
 
@@ -59,7 +77,18 @@ The site will be available at `http://localhost:5173`
 pnpm run build
 ```
 
-The static site will be generated in the `build` directory.
+### Deploying to Vercel
+
+This project is configured for Vercel deployment. See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) for detailed instructions.
+
+**Quick Deploy:**
+1. Push code to GitHub
+2. Import project in Vercel dashboard
+3. Add environment variables:
+   - `SANITY_PROJECT_ID` (your Sanity project ID)
+   - `SANITY_DATASET` (usually "production")
+   - `SANITY_API_TOKEN` (your Sanity API token)
+4. Deploy!
 
 ### Scripts
 
@@ -80,35 +109,42 @@ Theme variables can be easily customized in `src/styles/_variables.scss`:
 - **Spacing**: Consistent spacing units
 - **Breakpoints**: Responsive breakpoints
 
-## Payload CMS Integration
+## Sanity CMS Integration
 
-Payload CMS should be set up as a separate service. See [PAYLOAD_SETUP.md](./PAYLOAD_SETUP.md) for detailed setup instructions.
+Sanity CMS is integrated into this SvelteKit project. See [SANITY_SETUP.md](./SANITY_SETUP.md) for detailed setup instructions.
 
-### Collections Required
+### Content Types Available
 
-The CMS should include the following collections (see `payload.config.ts` for structure reference):
+The CMS includes the following content types (schemas defined in `src/lib/sanity.schema.ts`):
 
-- **Events** - Market stand events
-- **Gallery** - Pottery images  
-- **Workshops** - Workshop information
-- **Workshop Subscriptions** - Workshop registrations
-- **Newsletter Subscribers** - Newsletter signups
-- **Users** - CMS admin users
-- **Media** - File uploads
+- **Events** - Market stand events (`event`)
+- **Gallery** - Pottery images (`gallery`)
+- **Workshops** - Workshop information (`workshop`)
+- **Workshop Subscriptions** - Workshop registrations (`workshopSubscription`)
+- **Newsletter Subscribers** - Newsletter signups (`newsletterSubscriber`)
 
-### Connecting to Payload CMS
+### API Routes
 
-1. Set `PAYLOAD_URL` environment variable to your Payload CMS instance
-2. Update load functions in `src/routes/*/+page.ts` to fetch from Payload CMS
-3. Example: `fetch(\`${import.meta.env.PAYLOAD_URL}/api/events\`)`
+All API routes are automatically connected to Sanity CMS:
+
+- `GET /api/events` - List all events
+- `GET /api/gallery` - List all gallery images
+- `GET /api/workshops` - List all workshops
+- `POST /api/workshops/subscribe` - Create workshop subscription
+- `POST /api/newsletter/subscribe` - Create newsletter subscription
+- `POST /api/contact` - Handle contact form
+
+The frontend pages automatically fetch from these API routes.
 
 ## Project Structure
 
 ```
 src/
 ├── lib/
-│   ├── components/     # Reusable components
-│   └── types.ts        # TypeScript types
+│   ├── components/        # Reusable components
+│   ├── sanity.server.ts   # Sanity client configuration
+│   ├── sanity.schema.ts   # Sanity schema definitions
+│   └── types.ts           # TypeScript types
 ├── routes/
 │   ├── api/            # API endpoints
 │   ├── evenementen/    # Events page
