@@ -1,5 +1,17 @@
 <script lang="ts">
-	// Footer component
+	interface Props {
+		socialLinks?: Array<{ platform: string; url: string; label?: string }>;
+	}
+
+	const { socialLinks: socialLinksProp = [] }: Props = $props();
+	const socialLinks = $derived(socialLinksProp);
+
+	const getPlatformIcon = (platform: string): string => `/icons/${platform}.svg`
+
+	function getPlatformLabel(platform: string, label?: string): string {
+		if (label) return label;
+		return `@${platform}`;
+	}
 </script>
 
 <footer class="footer">
@@ -21,11 +33,25 @@
 			</div>
 			<div class="footer-section">
 				<h4>Volg mij</h4>
-				<div class="social-links">
-					<a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-						<img src="/icons/instagram.webp" alt="Instagram" width="24" height="24" />
-					</a>
-				</div>
+				{#if socialLinks.length > 0}
+					<div class="social-links">
+						{#each socialLinks as link}
+							<a
+								href={link.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label={link.platform}
+							>
+								<img
+									src={getPlatformIcon(link.platform)}
+									alt={link.platform}
+									width="24"
+									height="24"
+								/>
+							</a>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		</div>
 		<div class="footer-bottom">

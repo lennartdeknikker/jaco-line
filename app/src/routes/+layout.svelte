@@ -14,7 +14,7 @@
 		<main>
 			{@render children()}
 		</main>
-		<Footer />
+		<Footer socialLinks={data.socialLinks} />
 	</VisualEditing>
 </PreviewMode>
 

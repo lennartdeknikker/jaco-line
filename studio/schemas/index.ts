@@ -4,6 +4,7 @@ import workshop from './workshop';
 import workshopSubscription from './workshopSubscription';
 import newsletterSubscriber from './newsletterSubscriber';
 import contactMessage from './contactMessage';
+import siteSettings from './siteSettings';
 
 export const schemaTypes = [
 	event,
@@ -12,4 +13,5 @@ export const schemaTypes = [
 	workshopSubscription,
 	newsletterSubscriber,
 	contactMessage,
+	siteSettings,
 ];

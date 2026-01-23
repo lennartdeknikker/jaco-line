@@ -1,13 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Turnstile from '$lib/components/Turnstile.svelte';
+	import type { PageProps } from './$types';
 
-	const contactInfo = {
-		email: 'lennartdeknikker@gmai.com',
-		phone: '+31 6 12345678',
-		instagram: 'https://instagram.com/jacoline'
-	};
+	const { data }: PageProps = $props();
+	const contactInfo = $derived(data.contactInfo);
 
 	let formData = $state({
 		name: '',
@@ -90,18 +87,18 @@
 	<div class="contact-content">
 		<div class="contact-info">
 			<h2>Contactgegevens</h2>
-			<div class="info-item">
-				<strong>E-mail:</strong>
-				<a href="mailto:{contactInfo.email}">{contactInfo.email}</a>
-			</div>
-			<div class="info-item">
-				<strong>Telefoon:</strong>
-				<a href="tel:{contactInfo.phone}">{contactInfo.phone}</a>
-			</div>
-			<div class="info-item">
-				<strong>Instagram:</strong>
-				<a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer">@jacoline_keramiek</a>
-			</div>
+			{#if contactInfo.email}
+				<div class="info-item">
+					<strong>E-mail:</strong>
+					<a href="mailto:{contactInfo.email}">{contactInfo.email}</a>
+				</div>
+			{/if}
+			{#if contactInfo.phone}
+				<div class="info-item">
+					<strong>Telefoon:</strong>
+					<a href="tel:{contactInfo.phone}">{contactInfo.phone}</a>
+				</div>
+			{/if}
 		</div>
 
 		<div class="contact-form-wrapper">
