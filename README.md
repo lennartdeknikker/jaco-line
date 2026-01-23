@@ -41,18 +41,20 @@ pnpm install
 
 3. Set up environment variables:
 ```bash
-# Create .env file
-cat > .env << EOF
-SANITY_PROJECT_ID=your-project-id-here
-SANITY_DATASET=production
+# Create .env file in the app/ directory
+cat > app/.env << EOF
+PUBLIC_SANITY_PROJECT_ID=your-project-id-here
+PUBLIC_SANITY_DATASET=production
+PUBLIC_SANITY_STUDIO_URL=https://your-project-id.sanity.studio
 SANITY_API_TOKEN=your-api-token-here
 EOF
 ```
 
-Or manually create `.env` with:
-- `SANITY_PROJECT_ID` - Your Sanity project ID
-- `SANITY_DATASET` - Usually "production" (or "development")
-- `SANITY_API_TOKEN` - Create a token in Sanity Studio → API → Tokens
+Or manually create `app/.env` with:
+- `PUBLIC_SANITY_PROJECT_ID` - Your Sanity project ID (must have PUBLIC_ prefix)
+- `PUBLIC_SANITY_DATASET` - Usually "production" (or "development") (must have PUBLIC_ prefix)
+- `PUBLIC_SANITY_STUDIO_URL` - Your Sanity Studio URL (must have PUBLIC_ prefix)
+- `SANITY_API_TOKEN` - Create a token in Sanity Studio → API → Tokens with **Editor** permissions
 
 4. Set up Sanity schemas:
    - See `src/lib/sanity.schema.ts` for schema definitions
@@ -85,9 +87,10 @@ This project is configured for Vercel deployment. See [VERCEL_DEPLOYMENT.md](./V
 1. Push code to GitHub
 2. Import project in Vercel dashboard
 3. Add environment variables:
-   - `SANITY_PROJECT_ID` (your Sanity project ID)
-   - `SANITY_DATASET` (usually "production")
-   - `SANITY_API_TOKEN` (your Sanity API token)
+   - `PUBLIC_SANITY_PROJECT_ID` (your Sanity project ID)
+   - `PUBLIC_SANITY_DATASET` (usually "production")
+   - `PUBLIC_SANITY_STUDIO_URL` (your Sanity Studio URL)
+   - `SANITY_API_TOKEN` (your Sanity API token with Editor permissions)
 4. Deploy!
 
 ### Scripts

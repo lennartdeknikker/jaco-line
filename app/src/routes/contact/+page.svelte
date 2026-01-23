@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
+	import Turnstile from '$lib/components/Turnstile.svelte';
 
 	const contactInfo = {
-		email: 'info@jaco-line.nl',
+		email: 'lennartdeknikker@gmai.com',
 		phone: '+31 6 12345678',
 		instagram: 'https://instagram.com/jacoline'
 	};
@@ -17,11 +18,19 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let error = $state('');
+	let turnstileToken = $state<string | null>(null);
+	let turnstileComponent = $state<{ reset: () => void } | null>(null);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		submitting = true;
 		error = '';
+
+		if (!turnstileToken) {
+			error = 'Gelieve de CAPTCHA te voltooien.';
+			submitting = false;
+			return;
+		}
 
 		try {
 			const response = await fetch('/api/contact', {
@@ -29,20 +38,39 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(formData)
+				body: JSON.stringify({
+					...formData,
+					turnstileToken
+				})
 			});
 
 			if (response.ok) {
 				submitted = true;
 				formData = { name: '', email: '', message: '' };
+				turnstileToken = null;
+				turnstileComponent?.reset();
 			} else {
-				error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+				const errorData = await response.json().catch(() => ({}));
+				error = errorData.error || 'Er is iets misgegaan. Probeer het later opnieuw.';
+				turnstileComponent?.reset();
+				turnstileToken = null;
 			}
 		} catch (err) {
 			error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+			turnstileComponent?.reset();
+			turnstileToken = null;
 		} finally {
 			submitting = false;
 		}
+	}
+
+	function handleTurnstileVerify(token: string) {
+		turnstileToken = token;
+	}
+
+	function handleTurnstileError() {
+		turnstileToken = null;
+		error = 'CAPTCHA verificatie mislukt. Probeer het opnieuw.';
 	}
 </script>
 
@@ -72,7 +100,7 @@
 			</div>
 			<div class="info-item">
 				<strong>Instagram:</strong>
-				<a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer">@jacoline</a>
+				<a href={contactInfo.instagram} target="_blank" rel="noopener noreferrer">@jacoline_keramiek</a>
 			</div>
 		</div>
 
@@ -99,7 +127,12 @@
 						<label for="message">Bericht</label>
 						<textarea id="message" bind:value={formData.message} rows="6" required></textarea>
 					</div>
-					<Button type="submit" variant="primary" disabled={submitting}>
+					<Turnstile
+						bind:this={turnstileComponent}
+						onVerify={handleTurnstileVerify}
+						onError={handleTurnstileError}
+					/>
+					<Button type="submit" variant="primary" disabled={submitting || !turnstileToken}>
 						{submitting ? 'Verzenden...' : 'Verzenden'}
 					</Button>
 				</form>

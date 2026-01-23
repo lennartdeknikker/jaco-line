@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
+	import Turnstile from '$lib/components/Turnstile.svelte';
 
 	let formData = $state({
 		name: '',
@@ -9,11 +10,19 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let error = $state('');
+	let turnstileToken = $state<string | null>(null);
+	let turnstileComponent = $state<{ reset: () => void } | null>(null);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		submitting = true;
 		error = '';
+
+		if (!turnstileToken) {
+			error = 'Gelieve de CAPTCHA te voltooien.';
+			submitting = false;
+			return;
+		}
 
 		try {
 			const response = await fetch('/api/newsletter/subscribe', {
@@ -21,20 +30,39 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(formData)
+				body: JSON.stringify({
+					...formData,
+					turnstileToken
+				})
 			});
 
 			if (response.ok) {
 				submitted = true;
 				formData = { name: '', email: '' };
+				turnstileToken = null;
+				turnstileComponent?.reset();
 			} else {
-				error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+				const errorData = await response.json().catch(() => ({}));
+				error = errorData.error || 'Er is iets misgegaan. Probeer het later opnieuw.';
+				turnstileComponent?.reset();
+				turnstileToken = null;
 			}
 		} catch (err) {
 			error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+			turnstileComponent?.reset();
+			turnstileToken = null;
 		} finally {
 			submitting = false;
 		}
+	}
+
+	function handleTurnstileVerify(token: string) {
+		turnstileToken = token;
+	}
+
+	function handleTurnstileError() {
+		turnstileToken = null;
+		error = 'CAPTCHA verificatie mislukt. Probeer het opnieuw.';
 	}
 </script>
 
@@ -77,7 +105,12 @@
 					<label for="email">E-mail *</label>
 					<input type="email" id="email" bind:value={formData.email} required />
 				</div>
-				<Button type="submit" variant="primary" disabled={submitting}>
+				<Turnstile
+					bind:this={turnstileComponent}
+					onVerify={handleTurnstileVerify}
+					onError={handleTurnstileError}
+				/>
+				<Button type="submit" variant="primary" disabled={submitting || !turnstileToken}>
 					{submitting ? 'Inschrijven...' : 'Inschrijven'}
 				</Button>
 			</form>

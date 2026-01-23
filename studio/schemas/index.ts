@@ -3,6 +3,7 @@ import gallery from './gallery';
 import workshop from './workshop';
 import workshopSubscription from './workshopSubscription';
 import newsletterSubscriber from './newsletterSubscriber';
+import contactMessage from './contactMessage';
 
 export const schemaTypes = [
 	event,
@@ -10,4 +11,5 @@ export const schemaTypes = [
 	workshop,
 	workshopSubscription,
 	newsletterSubscriber,
+	contactMessage,
 ];

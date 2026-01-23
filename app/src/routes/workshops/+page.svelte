@@ -2,6 +2,7 @@
 	import type { PageProps } from './$types';
 	import type { Workshop } from '$lib/types';
 	import Button from '$lib/components/Button.svelte';
+	import Turnstile from '$lib/components/Turnstile.svelte';
 
 	const { data }: PageProps = $props();
 	let formData = $state({
@@ -15,6 +16,8 @@
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let error = $state('');
+	let turnstileToken = $state<string | null>(null);
+	let turnstileComponent = $state<{ reset: () => void } | null>(null);
 
 
 	function formatDate(dateString: string) {
@@ -31,6 +34,7 @@
 		selectedWorkshop = workshop;
 		formData.workshopId = workshop._id;
 		showForm = true;
+		error = '';
 	}
 
 	function closeForm() {
@@ -39,6 +43,8 @@
 		formData = { name: '', email: '', phone: '', workshopId: '' };
 		submitted = false;
 		error = '';
+		turnstileToken = null;
+		turnstileComponent?.reset();
 	}
 
 	async function handleSubmit(event: Event) {
@@ -46,25 +52,50 @@
 		submitting = true;
 		error = '';
 
+		if (!turnstileToken) {
+			error = 'Gelieve de CAPTCHA te voltooien.';
+			submitting = false;
+			return;
+		}
+
 		try {
 			const response = await fetch('/api/workshops/subscribe', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(formData)
+				body: JSON.stringify({
+					...formData,
+					turnstileToken
+				})
 			});
 
 			if (response.ok) {
 				submitted = true;
+				turnstileToken = null;
+				turnstileComponent?.reset();
 			} else {
-				error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+				const errorData = await response.json().catch(() => ({}));
+				error = errorData.error || 'Er is iets misgegaan. Probeer het later opnieuw.';
+				turnstileComponent?.reset();
+				turnstileToken = null;
 			}
 		} catch (err) {
 			error = 'Er is iets misgegaan. Probeer het later opnieuw.';
+			turnstileComponent?.reset();
+			turnstileToken = null;
 		} finally {
 			submitting = false;
 		}
+	}
+
+	function handleTurnstileVerify(token: string) {
+		turnstileToken = token;
+	}
+
+	function handleTurnstileError() {
+		turnstileToken = null;
+		error = 'CAPTCHA verificatie mislukt. Probeer het opnieuw.';
 	}
 </script>
 
@@ -105,15 +136,22 @@
 								<strong>Prijs:</strong> €{workshop.price}
 							</p>
 						{/if}
-						{#if workshop.maxParticipants}
-							<p class="workshop-participants">
-								<strong>Maximaal:</strong> {workshop.maxParticipants} deelnemers
-							</p>
-						{/if}
-						{#if workshop.description}
-							<p class="workshop-description">{workshop.description}</p>
-						{/if}
-						<Button variant="primary" onclick={() => openForm(workshop)}>Inschrijven</Button>
+					{#if workshop.maxParticipants}
+						<p class="workshop-participants">
+							<strong>Deelnemers:</strong> {workshop.currentParticipants || 0} / {workshop.maxParticipants}
+							{#if workshop.isFull}
+								<span class="full-badge">VOL</span>
+							{/if}
+						</p>
+					{/if}
+					{#if workshop.description}
+						<p class="workshop-description">{workshop.description}</p>
+					{/if}
+					{#if workshop.isFull}
+						<Button variant="primary" disabled={true}>Workshop vol</Button>
+					{:else}
+						<Button variant="primary" onClick={() => openForm(workshop)}>Inschrijven</Button>
+					{/if}
 					</div>
 				</article>
 			{/each}
@@ -146,8 +184,9 @@
 			<h2 id="modal-title">Inschrijven voor {selectedWorkshop.title}</h2>
 			{#if submitted}
 				<div class="success-message">
-					<p>Bedankt voor je inschrijving! Je ontvangt binnenkort een bevestiging per e-mail.</p>
-					<Button variant="primary" onclick={closeForm}>Sluiten</Button>
+					<p>Bedankt voor je inschrijving voor <strong>{selectedWorkshop.title}</strong>!</p>
+					<p>Je ontvangt binnenkort een bevestiging per e-mail.</p>
+					<Button variant="primary" onClick={closeForm}>Sluiten</Button>
 				</div>
 			{:else}
 				<form onsubmit={handleSubmit} class="workshop-form">
@@ -166,7 +205,12 @@
 						<label for="phone">Telefoon</label>
 						<input type="tel" id="phone" bind:value={formData.phone} />
 					</div>
-					<Button type="submit" variant="primary" disabled={submitting}>
+					<Turnstile
+						bind:this={turnstileComponent}
+						onVerify={handleTurnstileVerify}
+						onError={handleTurnstileError}
+					/>
+					<Button type="submit" variant="primary" disabled={submitting || !turnstileToken}>
 						{submitting ? 'Inschrijven...' : 'Inschrijven'}
 					</Button>
 				</form>
@@ -259,6 +303,20 @@
 	.workshop-participants {
 		margin: $spacing-sm 0;
 		color: $color-text;
+		display: flex;
+		align-items: center;
+		gap: $spacing-xs;
+	}
+
+	.full-badge {
+		display: inline-block;
+		padding: $spacing-xs $spacing-sm;
+		background: $color-error;
+		color: white;
+		border-radius: $border-radius-sm;
+		font-size: $font-size-small;
+		font-weight: $font-weight-bold;
+		margin-left: $spacing-xs;
 	}
 
 	.workshop-description {

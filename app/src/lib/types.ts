@@ -29,6 +29,8 @@ export interface Workshop {
 	location: string;
 	price?: number;
 	maxParticipants?: number;
+	currentParticipants?: number;
+	isFull?: boolean;
 	_createdAt: string;
 	_updatedAt: string;
 }

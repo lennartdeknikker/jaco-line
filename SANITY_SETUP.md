@@ -32,15 +32,15 @@ PUBLIC_SANITY_DATASET=production
 PUBLIC_SANITY_STUDIO_URL=https://your-project-id.sanity.studio
 
 # Private (server-only)
-SANITY_VIEWER_TOKEN=your-viewer-token-here
+SANITY_API_TOKEN=your-api-token-here
 ```
 
 **Important:**
 - `PUBLIC_SANITY_PROJECT_ID`: Found in your Sanity project settings (must have `PUBLIC_` prefix)
 - `PUBLIC_SANITY_DATASET`: Usually "production" (or "development" for testing) (must have `PUBLIC_` prefix)
 - `PUBLIC_SANITY_STUDIO_URL`: Your Sanity Studio URL (must have `PUBLIC_` prefix)
-- `SANITY_VIEWER_TOKEN`: Create a token in Sanity Studio → API → Tokens with Viewer permissions
-  - This token is used to fetch draft content when preview mode is enabled
+- `SANITY_API_TOKEN`: Create a token in Sanity Studio → API → Tokens with **Editor** permissions
+  - This token is used to fetch draft content when preview mode is enabled AND for write operations (creating subscriptions)
   - Keep this token private (no `PUBLIC_` prefix)
 
 ### 3. Set Up Sanity Studio (Optional but Recommended)

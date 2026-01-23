@@ -4,13 +4,15 @@
 		variant?: 'primary' | 'secondary' | 'outline';
 		type?: 'button' | 'submit' | 'reset';
 		disabled?: boolean;
+		onClick?: (event: MouseEvent) => void;
 	}
 
 	const {
 		href = undefined,
 		variant = 'primary',
 		type = 'button',
-		disabled = false
+		disabled = false,
+		onClick
 	}: Props = $props();
 </script>
 
@@ -23,6 +25,7 @@
 	<button
 		{type}
 		{disabled}
+		onclick={onClick}
 		class="button"
 		class:primary={variant === 'primary'}
 		class:secondary={variant === 'secondary'}

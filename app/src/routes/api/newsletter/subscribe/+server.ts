@@ -1,10 +1,27 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { sanityClient } from '$lib/sanity.server';
+import { verifyTurnstileToken } from '$lib/turnstile.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.json();
+
+		// Validate required fields
+		if (!data.email) {
+			return json({ success: false, error: 'E-mail is verplicht' }, { status: 400 });
+		}
+
+		// Verify Turnstile token
+		if (data.turnstileToken) {
+			const isValid = await verifyTurnstileToken(data.turnstileToken);
+			if (!isValid) {
+				return json(
+					{ success: false, error: 'CAPTCHA verificatie mislukt. Probeer het opnieuw.' },
+					{ status: 400 }
+				);
+			}
+		}
 
 		// Check if email already exists
 		const existing = await sanityClient.fetch(
@@ -13,7 +30,10 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 
 		if (existing) {
-			return json({ success: false, error: 'Email already subscribed' }, { status: 400 });
+			return json(
+				{ success: false, error: 'Dit e-mailadres is al ingeschreven' },
+				{ status: 400 }
+			);
 		}
 
 		const subscriber = {

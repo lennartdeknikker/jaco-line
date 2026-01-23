@@ -9,6 +9,18 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		turnstile?: {
+			render: (container: HTMLElement, options: {
+				sitekey: string;
+				callback?: (token: string) => void;
+				'error-callback'?: () => void;
+			}) => string;
+			remove: (widgetId: string) => void;
+			reset: (widgetId: string) => void;
+		};
+	}
 }
 
 export {};

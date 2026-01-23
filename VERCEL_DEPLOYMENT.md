@@ -79,9 +79,12 @@ The project is already configured for Vercel:
    (Usually "production" or "development")
    
    ```
+   PUBLIC_SANITY_PROJECT_ID=your-project-id-here
+   PUBLIC_SANITY_DATASET=production
+   PUBLIC_SANITY_STUDIO_URL=https://your-project-id.sanity.studio
    SANITY_API_TOKEN=your-api-token-here
    ```
-   (The API token you created in Step 1)
+   (All Sanity environment variables - note the PUBLIC_ prefixes for client-side variables)
 
 5. **Deploy**
    - Click "Deploy"
@@ -112,14 +115,17 @@ The project is already configured for Vercel:
 
 4. **Add Environment Variables**
    ```bash
-   vercel env add SANITY_PROJECT_ID
+   vercel env add PUBLIC_SANITY_PROJECT_ID
    # Paste your Sanity project ID
    
-   vercel env add SANITY_DATASET
+   vercel env add PUBLIC_SANITY_DATASET
    # Enter: production
    
+   vercel env add PUBLIC_SANITY_STUDIO_URL
+   # Enter: https://your-project-id.sanity.studio
+   
    vercel env add SANITY_API_TOKEN
-   # Paste your Sanity API token
+   # Paste your Sanity API token (Editor permissions)
    ```
 
 5. **Redeploy with Environment Variables**
@@ -147,16 +153,17 @@ Required environment variables in Vercel:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `SANITY_PROJECT_ID` | Your Sanity project ID | `abc123xyz` |
-| `SANITY_DATASET` | Your Sanity dataset name | `production` |
-| `SANITY_API_TOKEN` | Your Sanity API token | `sk...` (long token string) |
+| `PUBLIC_SANITY_PROJECT_ID` | Your Sanity project ID | `abc123xyz` |
+| `PUBLIC_SANITY_DATASET` | Your Sanity dataset name | `production` |
+| `PUBLIC_SANITY_STUDIO_URL` | Your Sanity Studio URL | `https://abc123xyz.sanity.studio` |
+| `SANITY_API_TOKEN` | Your Sanity API token (Editor permissions) | `sk...` (long token string) |
 
 ## Troubleshooting
 
 ### "Cannot connect to Sanity"
-- Verify `SANITY_PROJECT_ID` is correct in Vercel environment variables
-- Check that `SANITY_DATASET` matches your dataset name
-- Verify `SANITY_API_TOKEN` is set and has correct permissions
+- Verify `PUBLIC_SANITY_PROJECT_ID` is correct in Vercel environment variables
+- Check that `PUBLIC_SANITY_DATASET` matches your dataset name
+- Verify `SANITY_API_TOKEN` is set and has Editor permissions (not just Viewer)
 - Check Vercel function logs for detailed error messages
 
 ### "API routes returning empty arrays"

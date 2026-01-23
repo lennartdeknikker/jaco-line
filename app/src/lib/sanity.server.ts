@@ -1,10 +1,10 @@
-import { SANITY_VIEWER_TOKEN } from '$env/static/private';
+import { SANITY_API_TOKEN } from '$env/static/private';
 import { client } from '$lib/sanity';
 import imageUrlBuilder from '@sanity/image-url';
 
-// Server-only Sanity client with Viewer token for fetching draft content
+// Server-only Sanity client with API token for fetching draft content and write operations
 export const serverClient = client.withConfig({
-	token: SANITY_VIEWER_TOKEN
+	token: SANITY_API_TOKEN
 });
 
 // Image URL builder for Sanity images
@@ -14,5 +14,5 @@ export function urlFor(source: any) {
 	return builder.image(source);
 }
 
-// Export the regular client for backward compatibility in API routes
-export { client as sanityClient };
+// Export serverClient as sanityClient for API routes (has write permissions)
+export { serverClient as sanityClient };
