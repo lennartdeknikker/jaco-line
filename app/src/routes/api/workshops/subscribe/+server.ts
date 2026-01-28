@@ -45,7 +45,23 @@ export const POST: RequestHandler = async ({ request }) => {
 			{ workshopId: data.workshopId }
 		);
 
-		if (workshop?.maxParticipants) {
+		if (!workshop) {
+			return json(
+				{ success: false, error: 'Workshop niet gevonden' },
+				{ status: 404 }
+			);
+		}
+
+		// Check CMS isFull field first (overrides calculation)
+		if (workshop.isFull === true) {
+			return json(
+				{ success: false, error: 'Deze workshop is vol. Er zijn geen plaatsen meer beschikbaar.' },
+				{ status: 400 }
+			);
+		}
+
+		// Fall back to calculation if CMS field is not set
+		if (workshop.maxParticipants) {
 			const subscriptionCount = await sanityClient.fetch(
 				`count(*[_type == "workshopSubscription" && workshop._ref == $workshopId])`,
 				{ workshopId: data.workshopId }

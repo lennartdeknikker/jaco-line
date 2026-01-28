@@ -15,7 +15,6 @@ export const load: LayoutServerLoad = async ({ locals: { sanity }, fetch }) => {
 		console.error('Error loading site settings:', error);
 	}
 	
-	console.log("🐟 ~ load ~ socialLinks:", socialLinks)
 	return { previewEnabled, socialLinks, test: 'testje' };
 };
 

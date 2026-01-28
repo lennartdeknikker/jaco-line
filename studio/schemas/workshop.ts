@@ -43,6 +43,13 @@ export default defineType({
 			title: 'Maximaal aantal deelnemers',
 			type: 'number',
 		}),
+		defineField({
+			name: 'isFull',
+			title: 'Workshop vol (overschrijft automatische berekening)',
+			type: 'boolean',
+			description: 'Schakel dit aan om de workshop handmatig als vol te markeren, ongeacht het aantal deelnemers.',
+			initialValue: false,
+		}),
 	],
 	preview: {
 		select: {

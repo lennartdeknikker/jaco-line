@@ -5,6 +5,7 @@
 		type?: 'button' | 'submit' | 'reset';
 		disabled?: boolean;
 		onClick?: (event: MouseEvent) => void;
+		children?: import('svelte').Snippet;
 	}
 
 	const {
@@ -12,14 +13,17 @@
 		variant = 'primary',
 		type = 'button',
 		disabled = false,
-		onClick
+		onClick,
+		children
 	}: Props = $props();
 </script>
 
 {#if href}
 	<a href={href} class="button" class:primary={variant === 'primary'} class:secondary={variant === 'secondary'}
 		class:outline={variant === 'outline'}>
-		<slot />
+		{#if children}
+			{@render children()}
+		{/if}
 	</a>
 {:else}
 	<button
@@ -32,7 +36,9 @@
 		class:outline={variant === 'outline'}
 		class:disabled={disabled}
 	>
-		<slot />
+		{#if children}
+			{@render children()}
+		{/if}
 	</button>
 {/if}
 

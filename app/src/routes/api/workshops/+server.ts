@@ -15,12 +15,16 @@ export const GET: RequestHandler = async () => {
 					{ workshopId: workshop._id }
 				);
 
+				// Check CMS isFull field first, then fall back to calculation
+				const isFullFromCMS = workshop.isFull === true;
+				const isFullFromCalculation = workshop.maxParticipants
+					? subscriptionCount >= workshop.maxParticipants
+					: false;
+
 				return {
 					...workshop,
 					currentParticipants: subscriptionCount,
-					isFull: workshop.maxParticipants
-						? subscriptionCount >= workshop.maxParticipants
-						: false
+					isFull: isFullFromCMS || isFullFromCalculation
 				};
 			})
 		);

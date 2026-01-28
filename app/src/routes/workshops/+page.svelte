@@ -177,6 +177,7 @@
 			class="modal-content"
 			onclick={(e) => e.stopPropagation()}
 			role="dialog"
+			tabindex="-1"
 			aria-labelledby="modal-title"
 			onkeydown={(e) => e.key === 'Escape' && closeForm()}
 		>

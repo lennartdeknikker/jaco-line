@@ -9,7 +9,7 @@
 
 	const { onVerify, onError }: Props = $props();
 
-	let container: HTMLDivElement;
+	let container = $state<HTMLDivElement | undefined>(undefined);
 	let widgetId: string | null = null;
 	let turnstileToken = $state<string | null>(null);
 
@@ -20,7 +20,7 @@
 		}
 
 		// Check if script already loaded
-		if (window.turnstile && container) {
+		if (window.turnstile && container !== undefined) {
 			renderWidget();
 			return;
 		}
@@ -38,7 +38,7 @@
 	});
 
 	function renderWidget() {
-		if (window.turnstile && container && PUBLIC_TURNSTILE_SITE_KEY) {
+		if (window.turnstile && container !== undefined && PUBLIC_TURNSTILE_SITE_KEY) {
 			widgetId = window.turnstile.render(container, {
 				sitekey: PUBLIC_TURNSTILE_SITE_KEY,
 				callback: (token: string) => {
