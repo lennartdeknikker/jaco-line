@@ -15,8 +15,8 @@
 </script>
 
 <svelte:head>
-	<title>Galerij - Jaco Line</title>
-	<meta name="description" content="Bekijk de collectie handgemaakt keramiek van Jaco Line." />
+	<title>Galerij - JacoLine</title>
+	<meta name="description" content="Bekijk de collectie handgemaakt keramiek van JacoLine." />
 </svelte:head>
 
 <div class="page-header">

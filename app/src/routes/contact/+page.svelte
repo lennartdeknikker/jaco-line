@@ -72,8 +72,8 @@
 </script>
 
 <svelte:head>
-	<title>Contact - Jaco Line</title>
-	<meta name="description" content="Neem contact op met Jaco Line voor vragen over keramiek of workshops." />
+	<title>Contact - JacoLine</title>
+	<meta name="description" content="Neem contact op met JacoLine voor vragen over keramiek of workshops." />
 </svelte:head>
 
 <div class="page-header">

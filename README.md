@@ -1,6 +1,6 @@
-# Jaco Line - Pottery Website
+# JacoLine - Pottery Website
 
-A statically rendered SvelteKit website for Jaco Line pottery, integrated with Sanity CMS.
+A statically rendered SvelteKit website for JacoLine pottery, integrated with Sanity CMS.
 
 ## Features
 
@@ -162,5 +162,5 @@ src/
 
 ## License
 
-Private project for Jaco Line.
+Private project for JacoLine.
 

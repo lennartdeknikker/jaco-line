@@ -67,8 +67,8 @@
 </script>
 
 <svelte:head>
-	<title>Nieuwsbrief - Jaco Line</title>
-	<meta name="description" content="Schrijf je in voor de nieuwsbrief van Jaco Line en blijf op de hoogte van nieuwe evenementen en workshops." />
+	<title>Nieuwsbrief - JacoLine</title>
+	<meta name="description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe evenementen en workshops." />
 </svelte:head>
 
 <div class="page-header">

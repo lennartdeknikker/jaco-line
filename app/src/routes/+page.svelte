@@ -6,14 +6,14 @@
 </script>
 
 <svelte:head>
-	<title>Jaco Line - Handgemaakt Keramiek</title>
-	<meta name="description" content="Ontdek handgemaakt keramiek van Jaco Line. Bezoek onze marktkraam op verschillende evenementen." />
+	<title>JacoLine - Handgemaakt Keramiek</title>
+	<meta name="description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
 </svelte:head>
 
 <section class="hero">
 	<div class="container">
 		<div class="hero-content">
-			<h1>Jaco Line</h1>
+			<img src="/images/jaco-line-logo.png" alt="JacoLine" class="hero-logo" />
 			<p class="subtitle">Handgemaakt keramiek met passie en aandacht voor detail</p>
 			<div class="hero-actions">
 				<Button href="/evenementen" variant="primary">Bekijk evenementen</Button>
@@ -93,13 +93,21 @@
 		margin: 0 auto;
 	}
 
-	.hero h1 {
-		font-size: 3.5rem;
-		margin-bottom: $spacing-md;
-		color: $color-text;
+	.hero-logo {
+		max-width: 300px;
+		width: 300px;
+		height: 300px;
+		margin: 0 auto $spacing-md;
+		display: block;
+		padding: 2px;
+		background: rgba(255, 255, 255, 0.1);
+		border-radius: 50%;
+		object-fit: contain;
 
 		@media (max-width: $breakpoint-md) {
-			font-size: 2.5rem;
+			max-width: 280px;
+			width: 280px;
+			height: 280px;
 		}
 	}
 

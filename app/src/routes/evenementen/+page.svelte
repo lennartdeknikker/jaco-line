@@ -15,8 +15,8 @@
 </script>
 
 <svelte:head>
-	<title>Evenementen - Jaco Line</title>
-	<meta name="description" content="Bekijk waar je Jaco Line kunt vinden op verschillende markten en evenementen." />
+	<title>Evenementen - JacoLine</title>
+	<meta name="description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en evenementen." />
 </svelte:head>
 
 <div class="page-header">

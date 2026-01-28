@@ -21,7 +21,7 @@
 <nav class="nav">
 	<div class="container">
 		<div class="nav-content">
-			<a href="/" class="logo">Jaco Line</a>
+			<a href="/" class="logo">JacoLine</a>
 			<button
 				class="mobile-toggle"
 				aria-label="Toggle menu"
@@ -194,7 +194,8 @@
 
 			&:hover,
 			&.active {
-				background: $color-accent;
+				background: $color-primary;
+				color: $color-background;
 			}
 		}
 	}

@@ -100,8 +100,8 @@
 </script>
 
 <svelte:head>
-	<title>Workshops - Jaco Line</title>
-	<meta name="description" content="Schrijf je in voor een keramiek workshop bij Jaco Line." />
+	<title>Workshops - JacoLine</title>
+	<meta name="description" content="Schrijf je in voor een keramiek workshop bij JacoLine." />
 </svelte:head>
 
 <div class="page-header">

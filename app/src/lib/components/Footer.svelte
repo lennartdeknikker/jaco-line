@@ -18,7 +18,7 @@
 	<div class="container">
 		<div class="footer-content">
 			<div class="footer-section">
-				<h3>Jaco Line</h3>
+				<h3>JacoLine</h3>
 				<p>Handgemaakt keramiek met passie en aandacht voor detail</p>
 			</div>
 			<div class="footer-section">
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		<div class="footer-bottom">
-			<p>&copy; {new Date().getFullYear()} Jaco Line. Alle rechten voorbehouden.</p>
+			<p>&copy; {new Date().getFullYear()} JacoLine. Alle rechten voorbehouden.</p>
 		</div>
 	</div>
 </footer>

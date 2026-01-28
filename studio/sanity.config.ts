@@ -4,7 +4,7 @@ import { schemaTypes } from './schemas';
 
 export default defineConfig({
 	name: 'default',
-	title: 'Jaco Line CMS',
+	title: 'JacoLine CMS',
 	projectId: process.env.SANITY_STUDIO_PROJECT_ID || '',
 	dataset: process.env.SANITY_STUDIO_DATASET || 'production',
 	basePath: '/studio',
