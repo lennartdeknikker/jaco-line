@@ -23,6 +23,17 @@ export default defineType({
 			type: 'string',
 		}),
 		defineField({
+			name: 'participantCount',
+			title: 'Aantal deelnemers',
+			type: 'number',
+			validation: (Rule) => Rule.min(0).max(20).integer(),
+		}),
+		defineField({
+			name: 'remarks',
+			title: 'Opmerkingen',
+			type: 'text',
+		}),
+		defineField({
 			name: 'workshop',
 			title: 'Workshop',
 			type: 'reference',

@@ -9,6 +9,8 @@
 		name: '',
 		email: '',
 		phone: '',
+		participantCount: '',
+		remarks: '',
 		workshopId: ''
 	});
 	let showForm = $state(false);
@@ -40,7 +42,7 @@
 	function closeForm() {
 		showForm = false;
 		selectedWorkshop = null;
-		formData = { name: '', email: '', phone: '', workshopId: '' };
+		formData = { name: '', email: '', phone: '', participantCount: '', remarks: '', workshopId: '' };
 		submitted = false;
 		error = '';
 		turnstileToken = null;
@@ -205,6 +207,21 @@
 					<div class="form-group">
 						<label for="phone">Telefoon</label>
 						<input type="tel" id="phone" bind:value={formData.phone} />
+					</div>
+					<div class="form-group">
+						<label for="participantCount">Aantal deelnemers</label>
+						<input
+							type="number"
+							id="participantCount"
+							min="0"
+							max="20"
+							placeholder="0"
+							bind:value={formData.participantCount}
+						/>
+					</div>
+					<div class="form-group">
+						<label for="remarks">Opmerkingen</label>
+						<textarea id="remarks" bind:value={formData.remarks} rows="3"></textarea>
 					</div>
 					<Turnstile
 						bind:this={turnstileComponent}
@@ -396,7 +413,8 @@
 			color: $color-text;
 		}
 
-		input {
+		input,
+		textarea {
 			padding: $spacing-sm;
 			border: 1px solid $color-border;
 			border-radius: $border-radius-md;
@@ -408,6 +426,11 @@
 				outline: none;
 				border-color: $color-primary;
 			}
+		}
+
+		textarea {
+			resize: vertical;
+			min-height: 4rem;
 		}
 	}
 

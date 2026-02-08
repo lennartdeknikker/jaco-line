@@ -75,11 +75,22 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		}
 
+		const rawCount =
+			data.participantCount !== undefined && data.participantCount !== ''
+				? Number(data.participantCount)
+				: undefined;
+		const participantCount =
+			rawCount != null && !Number.isNaN(rawCount) && rawCount >= 0 && rawCount <= 20
+				? rawCount
+				: undefined;
+
 		const subscription = {
 			_type: 'workshopSubscription',
 			name: data.name,
 			email: data.email,
 			phone: data.phone || '',
+			...(participantCount != null ? { participantCount } : {}),
+			...(data.remarks ? { remarks: data.remarks } : {}),
 			workshop: {
 				_type: 'reference',
 				_ref: data.workshopId
