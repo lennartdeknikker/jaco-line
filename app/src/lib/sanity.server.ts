@@ -2,9 +2,11 @@ import { SANITY_API_TOKEN } from '$env/static/private';
 import { client } from '$lib/sanity';
 import imageUrlBuilder from '@sanity/image-url';
 
-// Server-only Sanity client with API token for fetching draft content and write operations
+// Server-only Sanity client with API token. Use perspective: 'published' so the deployed site
+// only shows published content; drafts are not exposed until you publish in the CMS.
 export const serverClient = client.withConfig({
-	token: SANITY_API_TOKEN
+	token: SANITY_API_TOKEN,
+	perspective: 'published'
 });
 
 // Image URL builder for Sanity images

@@ -14,6 +14,12 @@ export const POST: RequestHandler = async ({ request }) => {
 				{ status: 400 }
 			);
 		}
+		if (!data.phone || String(data.phone).trim() === '') {
+			return json(
+				{ success: false, error: 'Telefoonnummer is verplicht' },
+				{ status: 400 }
+			);
+		}
 
 		// Verify Turnstile token
 		if (data.turnstileToken) {
@@ -88,7 +94,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			_type: 'workshopSubscription',
 			name: data.name,
 			email: data.email,
-			phone: data.phone || '',
+			phone: data.phone.trim(),
 			...(participantCount != null ? { participantCount } : {}),
 			...(data.remarks ? { remarks: data.remarks } : {}),
 			workshop: {

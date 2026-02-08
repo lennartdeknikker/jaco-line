@@ -205,8 +205,8 @@
 						<input type="email" id="email" bind:value={formData.email} required />
 					</div>
 					<div class="form-group">
-						<label for="phone">Telefoon</label>
-						<input type="tel" id="phone" bind:value={formData.phone} />
+						<label for="phone">Telefoon *</label>
+						<input type="tel" id="phone" bind:value={formData.phone} required />
 					</div>
 					<div class="form-group">
 						<label for="participantCount">Aantal deelnemers</label>

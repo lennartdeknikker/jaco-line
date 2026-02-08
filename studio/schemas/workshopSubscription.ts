@@ -21,6 +21,7 @@ export default defineType({
 			name: 'phone',
 			title: 'Telefoon',
 			type: 'string',
+			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
 			name: 'participantCount',
