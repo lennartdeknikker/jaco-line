@@ -59,7 +59,7 @@ export const GET: RequestHandler = async () => {
 				);
 				// Build image URLs for mainImage and images
 				const mainImageUrl = workshop.mainImage
-					? urlFor(workshop.mainImage).width(800).height(500).url()
+					? urlFor(workshop.mainImage).width(800).url()
 					: null;
 				const imageUrls =
 					workshop.images?.map((img: any) =>

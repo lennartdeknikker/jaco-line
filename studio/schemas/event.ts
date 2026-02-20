@@ -28,11 +28,19 @@ export default defineType({
 			type: 'string',
 			validation: (Rule) => Rule.required(),
 		}),
+		defineField({
+			name: 'image',
+			title: 'Afbeelding',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Thumbnail voor op de evenementenpagina.',
+		}),
 	],
 	preview: {
 		select: {
 			title: 'title',
 			subtitle: 'date',
+			media: 'image',
 		},
 	},
 });

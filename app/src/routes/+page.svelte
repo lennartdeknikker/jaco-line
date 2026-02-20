@@ -32,15 +32,24 @@
 			<div class="events-grid">
 				{#each data.events as event}
 					<article class="event-card">
-						<div class="event-date">
-							<span class="day">{new Date(event.date).getDate()}</span>
-							<span class="month">{new Date(event.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+						<div class="event-card-top">
+							<div class="event-date">
+								<span class="day">{new Date(event.date).getDate()}</span>
+								<span class="month">{new Date(event.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+							</div>
+							<div class="event-content">
+								<h3>{event.title}</h3>
+								<p class="event-location">{event.location}</p>
+								{#if event.description}
+									<p class="event-description">{event.description}</p>
+								{/if}
+							</div>
 						</div>
-						<div class="event-content">
-							<h3>{event.title}</h3>
-							<p class="event-location">{event.location}</p>
-							<p class="event-description">{event.description}</p>
-						</div>
+						{#if event.imageUrl}
+							<div class="event-card-image">
+								<img src={event.imageUrl} alt={event.title} />
+							</div>
+						{/if}
 					</article>
 				{/each}
 			</div>
@@ -146,12 +155,14 @@
 		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		gap: $spacing-lg;
 		margin-bottom: $spacing-xl;
+		align-items: start;
 	}
 
 	.event-card {
 		display: flex;
-		gap: $spacing-md;
-		padding: $spacing-lg;
+		flex-direction: column;
+		padding: 0;
+		overflow: hidden;
 		background: $color-background-alt;
 		border-radius: $border-radius-lg;
 		border: 1px solid $color-border;
@@ -163,19 +174,26 @@
 		}
 	}
 
+	.event-card-top {
+		display: flex;
+		gap: $spacing-md;
+		padding: $spacing-lg;
+	}
+
 	.event-date {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		min-width: 80px;
+		flex-shrink: 0;
+		width: 70px;
+		height: 70px;
 		background: $color-primary;
 		color: white;
 		border-radius: $border-radius-md;
-		padding: $spacing-sm;
 
 		.day {
-			font-size: 2rem;
+			font-size: 1.5rem;
 			font-weight: $font-weight-bold;
 			line-height: 1;
 		}
@@ -188,6 +206,19 @@
 
 	.event-content {
 		flex: 1;
+		min-width: 0;
+	}
+
+	.event-card-image {
+		width: 100%;
+		background: $color-border;
+
+		img {
+			width: 100%;
+			height: auto;
+			display: block;
+			vertical-align: middle;
+		}
 	}
 
 	.event-location {

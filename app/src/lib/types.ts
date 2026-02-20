@@ -5,6 +5,7 @@ export interface Event {
 	description?: string;
 	date: string;
 	location: string;
+	imageUrl?: string | null;
 	_createdAt: string;
 	_updatedAt: string;
 }

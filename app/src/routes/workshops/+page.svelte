@@ -152,9 +152,9 @@
 					</div>
 					<a href="/workshops/{w.slug?.current ?? w._id}" class="workshop-image-link">
 						{#if w.mainImageUrl}
-							<div class="workshop-image" style="background-image: url('{w.mainImageUrl}');"></div>
+							<img src={w.mainImageUrl} alt={w.title} class="workshop-image" />
 						{:else}
-							<div class="workshop-image workshop-image-placeholder"></div>
+							<div class="workshop-image-placeholder"></div>
 						{/if}
 					</a>
 					<div class="workshop-content">
@@ -339,10 +339,7 @@
 	.workshop-image-link {
 		grid-column: 2;
 		grid-row: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 200px;
+		display: block;
 		background: $color-background-alt;
 
 		@media (max-width: $breakpoint-md) {
@@ -353,12 +350,14 @@
 
 	.workshop-image {
 		width: 100%;
-		height: 200px;
-		background-size: cover;
-		background-position: center;
+		height: auto;
+		display: block;
+		vertical-align: middle;
 	}
 
 	.workshop-image-placeholder {
+		width: 100%;
+		min-height: 200px;
 		background: linear-gradient(135deg, $color-border 0%, color.adjust($color-border, $lightness: -10%) 100%);
 	}
 

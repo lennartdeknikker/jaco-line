@@ -38,11 +38,18 @@ export const eventSchema = {
 			type: 'string',
 			validation: (Rule: any) => Rule.required(),
 		},
+		{
+			name: 'image',
+			title: 'Afbeelding',
+			type: 'image',
+			options: { hotspot: true },
+		},
 	],
 	preview: {
 		select: {
 			title: 'title',
 			subtitle: 'date',
+			media: 'image',
 		},
 	},
 };
