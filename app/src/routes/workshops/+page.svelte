@@ -1,26 +1,32 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import type { Workshop } from '$lib/types';
+	import type { WorkshopWithSessions, WorkshopSession } from '$lib/types';
 	import Button from '$lib/components/Button.svelte';
 	import Turnstile from '$lib/components/Turnstile.svelte';
 
 	const { data }: PageProps = $props();
+
+	type WorkshopFromApi = WorkshopWithSessions & {
+		mainImageUrl?: string | null;
+		imageUrls?: (string | null)[];
+	};
+
 	let formData = $state({
 		name: '',
 		email: '',
 		phone: '',
 		participantCount: '',
 		remarks: '',
-		workshopId: ''
+		workshopSessionId: ''
 	});
 	let showForm = $state(false);
-	let selectedWorkshop = $state<Workshop | null>(null);
+	let selectedSession = $state<WorkshopSession | null>(null);
+	let selectedWorkshopTitle = $state('');
 	let submitting = $state(false);
 	let submitted = $state(false);
 	let error = $state('');
 	let turnstileToken = $state<string | null>(null);
 	let turnstileComponent = $state<{ reset: () => void } | null>(null);
-
 
 	function formatDate(dateString: string) {
 		const date = new Date(dateString);
@@ -32,17 +38,30 @@
 		});
 	}
 
-	function openForm(workshop: Workshop) {
-		selectedWorkshop = workshop;
-		formData.workshopId = workshop._id;
+	function getSessionPrice(session: WorkshopSession, defaultPrice?: number): number | undefined {
+		return session.price ?? defaultPrice;
+	}
+
+	function openForm(session: WorkshopSession, workshopTitle: string) {
+		selectedSession = session;
+		selectedWorkshopTitle = workshopTitle;
+		formData.workshopSessionId = session._id;
 		showForm = true;
 		error = '';
 	}
 
 	function closeForm() {
 		showForm = false;
-		selectedWorkshop = null;
-		formData = { name: '', email: '', phone: '', participantCount: '', remarks: '', workshopId: '' };
+		selectedSession = null;
+		selectedWorkshopTitle = '';
+		formData = {
+			name: '',
+			email: '',
+			phone: '',
+			participantCount: '',
+			remarks: '',
+			workshopSessionId: ''
+		};
 		submitted = false;
 		error = '';
 		turnstileToken = null;
@@ -116,44 +135,62 @@
 <div class="container">
 	{#if data.workshops.length > 0}
 		<div class="workshops-list">
-			{#each data.workshops as workshop}
+			{#each data.workshops as workshop (workshop._id)}
+				{@const w = workshop as WorkshopFromApi}
 				<article class="workshop-card">
-					<div class="workshop-date">
-						<span class="day">{new Date(workshop.date).getDate()}</span>
-						<span class="month">{new Date(workshop.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+					<div class="workshop-text">
+						<h2>
+							<a href="/workshops/{w.slug?.current ?? w._id}">{w.title}</a>
+						</h2>
+						{#if w.shortDescription}
+							<p class="workshop-short-description">{w.shortDescription}</p>
+						{:else if w.description}
+							<p class="workshop-short-description">{w.description.slice(0, 150)}{w.description.length > 150 ? '…' : ''}</p>
+						{/if}
 					</div>
+					<a href="/workshops/{w.slug?.current ?? w._id}" class="workshop-image-link">
+						{#if w.mainImageUrl}
+							<div class="workshop-image" style="background-image: url('{w.mainImageUrl}');"></div>
+						{:else}
+							<div class="workshop-image workshop-image-placeholder"></div>
+						{/if}
+					</a>
 					<div class="workshop-content">
-						<h2>{workshop.title}</h2>
-						<p class="workshop-date-text">{formatDate(workshop.date)}</p>
-						{#if workshop.time}
-							<p class="workshop-time">
-								<strong>Tijd:</strong> {workshop.time}
-							</p>
-						{/if}
-						<p class="workshop-location">
-							<strong>Locatie:</strong> {workshop.location}
-						</p>
-						{#if workshop.price}
-							<p class="workshop-price">
-								<strong>Prijs:</strong> €{workshop.price}
-							</p>
-						{/if}
-					{#if workshop.maxParticipants}
-						<p class="workshop-participants">
-							<strong>Deelnemers:</strong> {workshop.currentParticipants || 0} / {workshop.maxParticipants}
-							{#if workshop.isFull}
-								<span class="full-badge">VOL</span>
-							{/if}
-						</p>
-					{/if}
-					{#if workshop.description}
-						<p class="workshop-description">{workshop.description}</p>
-					{/if}
-					{#if workshop.isFull}
-						<Button variant="primary" disabled={true}>Workshop vol</Button>
-					{:else}
-						<Button variant="primary" onClick={() => openForm(workshop)}>Inschrijven</Button>
-					{/if}
+						<div class="sessions-list">
+							<h3>Beschikbare data</h3>
+							{#each w.sessions as session (session._id)}
+								<div class="session-row">
+									<div class="session-date">
+										<span class="day">{new Date(session.date).getDate()}</span>
+										<span class="month">{new Date(session.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+									</div>
+									<div class="session-details">
+										<p class="session-date-text">{formatDate(session.date)}</p>
+										{#if session.time}
+											<p class="session-meta"><strong>Tijd:</strong> {session.time}</p>
+										{/if}
+										<p class="session-meta"><strong>Locatie:</strong> {session.location}</p>
+										{#if getSessionPrice(session, w.defaultPrice) != null}
+											<p class="session-meta"><strong>Prijs:</strong> €{getSessionPrice(session, w.defaultPrice)}</p>
+										{/if}
+										{#if session.maxParticipants != null}
+											<p class="session-meta">
+												<strong>Deelnemers:</strong> {session.currentParticipants ?? 0} / {session.maxParticipants}
+												{#if session.isFull}
+													<span class="full-badge">VOL</span>
+												{/if}
+											</p>
+										{/if}
+										{#if session.isFull}
+											<Button variant="primary" disabled={true}>Vol</Button>
+										{:else}
+											<Button variant="primary" onClick={() => openForm(session, w.title)}>Inschrijven</Button>
+										{/if}
+									</div>
+								</div>
+							{/each}
+						</div>
+						<a href="/workshops/{w.slug?.current ?? w._id}" class="link-more">Meer info en foto's →</a>
 					</div>
 				</article>
 			{/each}
@@ -166,7 +203,7 @@
 	{/if}
 </div>
 
-{#if showForm && selectedWorkshop}
+{#if showForm && selectedSession && selectedWorkshopTitle}
 	<div
 		class="modal-overlay"
 		onclick={closeForm}
@@ -184,10 +221,11 @@
 			onkeydown={(e) => e.key === 'Escape' && closeForm()}
 		>
 			<button class="modal-close" onclick={closeForm} aria-label="Sluiten">×</button>
-			<h2 id="modal-title">Inschrijven voor {selectedWorkshop.title}</h2>
+			<h2 id="modal-title">Inschrijven voor {selectedWorkshopTitle}</h2>
+			<p class="modal-session-date">{selectedSession ? formatDate(selectedSession.date) : ''}{#if selectedSession?.time} – {selectedSession.time}{/if}</p>
 			{#if submitted}
 				<div class="success-message">
-					<p>Bedankt voor je inschrijving voor <strong>{selectedWorkshop.title}</strong>!</p>
+					<p>Bedankt voor je inschrijving voor <strong>{selectedWorkshopTitle}</strong>!</p>
 					<p>Je ontvangt binnenkort een bevestiging per e-mail.</p>
 					<Button variant="primary" onClick={closeForm}>Sluiten</Button>
 				</div>
@@ -259,71 +297,163 @@
 	.workshops-list {
 		display: flex;
 		flex-direction: column;
-		gap: $spacing-xl;
+		gap: $spacing-2xl;
 		margin-bottom: $spacing-3xl;
 	}
 
 	.workshop-card {
-		display: flex;
-		gap: $spacing-lg;
+		display: grid;
+		grid-template-columns: 1fr 280px;
+		grid-template-rows: auto auto;
+		gap: $spacing-xl;
 		padding: $spacing-xl;
 		background: $color-background-alt;
 		border-radius: $border-radius-lg;
 		border: 1px solid $color-border;
-		transition: transform $transition-base, box-shadow $transition-base;
+		transition: box-shadow $transition-base;
 
 		&:hover {
-			transform: translateY(-4px);
 			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 		}
 
 		@media (max-width: $breakpoint-md) {
-			flex-direction: column;
+			grid-template-columns: 1fr;
+			grid-template-rows: auto auto auto;
 		}
 	}
 
-	.workshop-date {
+	.workshop-text {
+		grid-column: 1;
+		grid-row: 1;
+		min-width: 0;
+
+		@media (max-width: $breakpoint-md) {
+			grid-column: 1;
+			grid-row: 1;
+		}
+	}
+
+	.workshop-image-link {
+		grid-column: 2;
+		grid-row: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 200px;
+		background: $color-background-alt;
+
+		@media (max-width: $breakpoint-md) {
+			grid-column: 1;
+			grid-row: 2;
+		}
+	}
+
+	.workshop-image {
+		width: 100%;
+		height: 200px;
+		background-size: cover;
+		background-position: center;
+	}
+
+	.workshop-image-placeholder {
+		background: linear-gradient(135deg, $color-border 0%, darken($color-border, 10%) 100%);
+	}
+
+	.workshop-content {
+		grid-column: 1 / -1;
+		grid-row: 2;
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-md;
+		padding: 0;
+		min-width: 0;
+
+		@media (max-width: $breakpoint-md) {
+			grid-row: 3;
+		}
+	}
+
+	.workshop-text h2 {
+		margin: 0 0 $spacing-sm 0;
+		font-size: 1.5rem;
+
+		a {
+			color: inherit;
+			text-decoration: none;
+
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.workshop-text .workshop-short-description {
+		color: $color-text-light;
+		margin: 0;
+		line-height: $line-height-base;
+	}
+
+	.sessions-list {
+		margin-top: $spacing-sm;
+	}
+
+	.sessions-list h3 {
+		font-size: $font-size-base;
+		margin: 0 0 $spacing-sm 0;
+		color: $color-text-light;
+	}
+
+	.session-row {
+		display: flex;
+		gap: $spacing-lg;
+		align-items: flex-start;
+		padding: $spacing-md 0;
+		border-bottom: 1px solid $color-border;
+
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+
+	.session-date {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		min-width: 100px;
+		min-width: 70px;
 		background: $color-primary;
 		color: white;
-		border-radius: $border-radius-lg;
-		padding: $spacing-lg;
+		border-radius: $border-radius-md;
+		padding: $spacing-sm;
 
 		.day {
-			font-size: 2.5rem;
+			font-size: 1.75rem;
 			font-weight: $font-weight-bold;
 			line-height: 1;
 		}
 
 		.month {
-			font-size: $font-size-base;
+			font-size: $font-size-small;
 			text-transform: uppercase;
 			margin-top: $spacing-xs;
 		}
 	}
 
-	.workshop-content {
+	.session-details {
 		flex: 1;
 	}
 
-	.workshop-date-text {
+	.session-date-text {
 		color: $color-text-light;
-		margin: $spacing-xs 0;
+		margin: 0 0 $spacing-xs 0;
 	}
 
-	.workshop-time,
-	.workshop-location,
-	.workshop-price,
-	.workshop-participants {
-		margin: $spacing-sm 0;
-		color: $color-text;
+	.session-meta {
+		margin: $spacing-xs 0;
 		display: flex;
 		align-items: center;
 		gap: $spacing-xs;
+		flex-wrap: wrap;
 	}
 
 	.full-badge {
@@ -337,10 +467,15 @@
 		margin-left: $spacing-xs;
 	}
 
-	.workshop-description {
-		margin: $spacing-md 0;
-		color: $color-text-light;
-		line-height: $line-height-base;
+	.link-more {
+		margin-top: auto;
+		color: $color-primary;
+		font-weight: $font-weight-medium;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
 	}
 
 	.empty-state {
@@ -394,6 +529,12 @@
 		&:hover {
 			background: $color-background-alt;
 		}
+	}
+
+	.modal-session-date {
+		color: $color-text-light;
+		margin: -$spacing-sm 0 $spacing-md 0;
+		font-size: $font-size-base;
 	}
 
 	.workshop-form {
@@ -451,4 +592,3 @@
 		color: $color-error;
 	}
 </style>
-

@@ -35,10 +35,10 @@ export default defineType({
 			type: 'text',
 		}),
 		defineField({
-			name: 'workshop',
-			title: 'Workshop',
+			name: 'workshopSession',
+			title: 'Workshop datum',
 			type: 'reference',
-			to: [{ type: 'workshop' }],
+			to: [{ type: 'workshopSession' }],
 			validation: (Rule) => Rule.required(),
 		}),
 	],

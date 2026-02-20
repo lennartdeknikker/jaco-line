@@ -2,7 +2,7 @@ import { defineField, defineType } from 'sanity';
 
 export default defineType({
 	name: 'workshop',
-	title: 'Workshop',
+	title: 'Workshop type',
 	type: 'document',
 	fields: [
 		defineField({
@@ -12,49 +12,63 @@ export default defineType({
 			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
+			name: 'slug',
+			title: 'Slug (voor URL, bv. draaien-basis)',
+			type: 'slug',
+			options: {
+				source: 'title',
+				maxLength: 96,
+			},
+			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
 			name: 'description',
 			title: 'Beschrijving',
 			type: 'text',
+			description: 'Uitgebreide beschrijving voor de workshop-detailpagina.',
 		}),
 		defineField({
-			name: 'date',
-			title: 'Datum',
-			type: 'date',
-			validation: (Rule) => Rule.required(),
-		}),
-		defineField({
-			name: 'time',
-			title: 'Tijd',
+			name: 'shortDescription',
+			title: 'Korte beschrijving',
 			type: 'string',
+			description: 'Korte tekst voor op de overzichtspagina (optioneel).',
 		}),
 		defineField({
-			name: 'location',
-			title: 'Locatie',
-			type: 'string',
-			validation: (Rule) => Rule.required(),
+			name: 'mainImage',
+			title: 'Hoofdafbeelding',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Afbeelding voor de workshop-kaart en detailpagina.',
 		}),
 		defineField({
-			name: 'price',
-			title: 'Prijs (€)',
+			name: 'images',
+			title: "Extra afbeeldingen (galerij op detailpagina)",
+			type: 'array',
+			of: [
+				{
+					type: 'image',
+					options: { hotspot: true },
+					fields: [
+						{
+							name: 'alt',
+							title: 'Alt tekst',
+							type: 'string',
+						},
+					],
+				},
+			],
+		}),
+		defineField({
+			name: 'defaultPrice',
+			title: 'Standaard prijs (€)',
 			type: 'number',
-		}),
-		defineField({
-			name: 'maxParticipants',
-			title: 'Maximaal aantal deelnemers',
-			type: 'number',
-		}),
-		defineField({
-			name: 'isFull',
-			title: 'Workshop vol (overschrijft automatische berekening)',
-			type: 'boolean',
-			description: 'Schakel dit aan om de workshop handmatig als vol te markeren, ongeacht het aantal deelnemers.',
-			initialValue: false,
+			description: 'Kan per datum overschreven worden.',
 		}),
 	],
 	preview: {
 		select: {
 			title: 'title',
-			subtitle: 'date',
+			media: 'mainImage',
 		},
 	},
 });

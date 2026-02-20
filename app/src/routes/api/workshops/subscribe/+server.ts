@@ -7,10 +7,10 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const data = await request.json();
 
-		// Validate required fields
-		if (!data.name || !data.email || !data.workshopId) {
+		// Validate required fields (workshopSessionId = the specific date they sign up for)
+		if (!data.name || !data.email || !data.workshopSessionId) {
 			return json(
-				{ success: false, error: 'Naam, e-mail en workshop zijn verplicht' },
+				{ success: false, error: 'Naam, e-mail en workshopdatum zijn verplicht' },
 				{ status: 400 }
 			);
 		}
@@ -32,50 +32,48 @@ export const POST: RequestHandler = async ({ request }) => {
 			}
 		}
 
-		// Check if already subscribed to this workshop
+		// Check if already subscribed to this workshop session
 		const existing = await sanityClient.fetch(
-			`*[_type == "workshopSubscription" && email == $email && workshop._ref == $workshopId][0]`,
-			{ email: data.email, workshopId: data.workshopId }
+			`*[_type == "workshopSubscription" && email == $email && workshopSession._ref == $sessionId][0]`,
+			{ email: data.email, sessionId: data.workshopSessionId }
 		);
 
 		if (existing) {
 			return json(
-				{ success: false, error: 'Je bent al ingeschreven voor deze workshop' },
+				{ success: false, error: 'Je bent al ingeschreven voor deze workshopdatum' },
 				{ status: 400 }
 			);
 		}
 
-		// Check if workshop is full
-		const workshop = await sanityClient.fetch(
-			`*[_type == "workshop" && _id == $workshopId][0]`,
-			{ workshopId: data.workshopId }
+		// Check if session exists and is not full
+		const session = await sanityClient.fetch(
+			`*[_type == "workshopSession" && _id == $sessionId][0]`,
+			{ sessionId: data.workshopSessionId }
 		);
 
-		if (!workshop) {
+		if (!session) {
 			return json(
-				{ success: false, error: 'Workshop niet gevonden' },
+				{ success: false, error: 'Workshopdatum niet gevonden' },
 				{ status: 404 }
 			);
 		}
 
-		// Check CMS isFull field first (overrides calculation)
-		if (workshop.isFull === true) {
+		if (session.isFull === true) {
 			return json(
-				{ success: false, error: 'Deze workshop is vol. Er zijn geen plaatsen meer beschikbaar.' },
+				{ success: false, error: 'Deze workshopdatum is vol. Er zijn geen plaatsen meer beschikbaar.' },
 				{ status: 400 }
 			);
 		}
 
-		// Fall back to calculation if CMS field is not set
-		if (workshop.maxParticipants) {
+		if (session.maxParticipants) {
 			const subscriptionCount = await sanityClient.fetch(
-				`count(*[_type == "workshopSubscription" && workshop._ref == $workshopId])`,
-				{ workshopId: data.workshopId }
+				`count(*[_type == "workshopSubscription" && workshopSession._ref == $sessionId])`,
+				{ sessionId: data.workshopSessionId }
 			);
 
-			if (subscriptionCount >= workshop.maxParticipants) {
+			if (subscriptionCount >= session.maxParticipants) {
 				return json(
-					{ success: false, error: 'Deze workshop is vol. Er zijn geen plaatsen meer beschikbaar.' },
+					{ success: false, error: 'Deze workshopdatum is vol. Er zijn geen plaatsen meer beschikbaar.' },
 					{ status: 400 }
 				);
 			}
@@ -97,9 +95,9 @@ export const POST: RequestHandler = async ({ request }) => {
 			phone: data.phone.trim(),
 			...(participantCount != null ? { participantCount } : {}),
 			...(data.remarks ? { remarks: data.remarks } : {}),
-			workshop: {
+			workshopSession: {
 				_type: 'reference',
-				_ref: data.workshopId
+				_ref: data.workshopSessionId
 			}
 		};
 
@@ -114,5 +112,3 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 	}
 };
-
-
