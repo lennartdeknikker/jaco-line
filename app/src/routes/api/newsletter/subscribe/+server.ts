@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { sanityClient } from '$lib/sanity.server';
 import { verifyTurnstileToken } from '$lib/turnstile.server';
+import { sendNewsletterSubscriptionNotification, sanitizeEmailAddress } from '$lib/email.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -43,6 +44,24 @@ export const POST: RequestHandler = async ({ request }) => {
 		};
 
 		const result = await sanityClient.create(subscriber);
+
+		// Send notification email if enabled in Sanity
+		const settings = await sanityClient.fetch<{
+			notificationEmail?: string;
+			newsletterNotificationEnabled?: boolean;
+		}>(`*[_type == "siteSettings"][0]{ notificationEmail, newsletterNotificationEnabled }`);
+		const rawNotificationEmail = settings?.notificationEmail?.trim();
+		const notificationEmail = rawNotificationEmail ? sanitizeEmailAddress(rawNotificationEmail) : '';
+		if (settings?.newsletterNotificationEnabled && notificationEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail)) {
+			const sendResult = await sendNewsletterSubscriptionNotification({
+				to: notificationEmail,
+				email: data.email,
+				...(data.name ? { name: data.name } : {}),
+			});
+			if (!sendResult.success) {
+				console.error('Newsletter notification email failed:', sendResult.error);
+			}
+		}
 
 		return json({ success: true, id: result._id }, { status: 201 });
 	} catch (error: any) {

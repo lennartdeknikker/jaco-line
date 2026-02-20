@@ -23,6 +23,10 @@ export const GET: RequestHandler = async () => {
 					phone: null,
 				},
 				socialLinks: [],
+				notificationEmail: null,
+				workshopNotificationEnabled: false,
+				contactFormNotificationEnabled: false,
+				newsletterNotificationEnabled: false,
 			});
 		}
 
@@ -45,6 +49,11 @@ export const GET: RequestHandler = async () => {
 			};
 		}
 
+		// Clean notification email (optional, for internal use)
+		if (settings.notificationEmail != null) {
+			settings.notificationEmail = cleanString(settings.notificationEmail) || null;
+		}
+
 		return json(settings);
 	} catch (error) {
 		console.error('Error fetching site settings:', error);
@@ -55,6 +64,10 @@ export const GET: RequestHandler = async () => {
 					phone: null,
 				},
 				socialLinks: [],
+				notificationEmail: null,
+				workshopNotificationEnabled: false,
+				contactFormNotificationEnabled: false,
+				newsletterNotificationEnabled: false,
 			},
 			{ status: 500 }
 		);

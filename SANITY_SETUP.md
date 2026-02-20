@@ -43,6 +43,17 @@ SANITY_API_TOKEN=your-api-token-here
   - This token is used to fetch draft content when preview mode is enabled AND for write operations (creating subscriptions)
   - Keep this token private (no `PUBLIC_` prefix)
 
+**Optional – notification emails (workshop, contact form, newsletter):**
+
+- `RESEND_API_KEY`: API key from [Resend](https://resend.com). When set, the app can send notification emails to the address configured in Sanity. Leave unset to disable.
+- `EMAIL_FROM`: Sender address for those emails (optional). Defaults to Resend’s sandbox address; for production, use a verified domain in Resend.
+
+In Site Instellingen:
+- **E-mailadres voor meldingen** – the address that receives all notifications (one address for all). Leave empty to receive no emails.
+- **E-mail bij workshop-inschrijving** – toggle on to receive an email on each workshop signup
+- **E-mail bij contactformulier** – toggle on to receive an email on each contact form submit
+- **E-mail bij nieuwsbrief-inschrijving** – toggle on to receive an email on each newsletter subscription
+
 ### 3. Set Up Sanity Studio (Optional but Recommended)
 
 Sanity Studio is a separate admin interface for managing content. You can either:

@@ -2,6 +2,7 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { sanityClient } from '$lib/sanity.server';
 import { verifyTurnstileToken } from '$lib/turnstile.server';
+import { sendWorkshopSubscriptionNotification, sanitizeEmailAddress } from '$lib/email.server';
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
@@ -45,9 +46,17 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
-		// Check if session exists and is not full
+		// Check if session exists and is not full (include workshop title for notification email)
 		const session = await sanityClient.fetch(
-			`*[_type == "workshopSession" && _id == $sessionId][0]`,
+			`*[_type == "workshopSession" && _id == $sessionId][0] {
+				_id,
+				date,
+				time,
+				location,
+				isFull,
+				maxParticipants,
+				"workshopTitle": workshop->title
+			}`,
 			{ sessionId: data.workshopSessionId }
 		);
 
@@ -102,6 +111,50 @@ export const POST: RequestHandler = async ({ request }) => {
 		};
 
 		const result = await sanityClient.create(subscription);
+
+		// Send notification email if enabled in Sanity (log errors, do not fail the request)
+		const settings = await sanityClient.fetch<{
+			notificationEmail?: string;
+			workshopNotificationEnabled?: boolean;
+		}>(`*[_type == "siteSettings"][0]{ notificationEmail, workshopNotificationEnabled }`);
+		const rawNotificationEmail = settings?.notificationEmail?.trim();
+		const notificationEmail = rawNotificationEmail ? sanitizeEmailAddress(rawNotificationEmail) : '';
+		const willSendNotification =
+			!!settings?.workshopNotificationEnabled && !!notificationEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail);
+		if (!willSendNotification) {
+			console.log('[Workshop subscribe] notification email skipped', {
+				workshopNotificationEnabled: settings?.workshopNotificationEnabled,
+				hasNotificationEmail: !!notificationEmail,
+				notificationEmailValid: notificationEmail ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail) : false,
+			});
+		}
+		if (willSendNotification) {
+			const sessionDate = session.date
+				? new Date(session.date).toLocaleDateString('nl-NL', {
+						weekday: 'long',
+						year: 'numeric',
+						month: 'long',
+						day: 'numeric'
+					})
+				: session.date;
+			const sendResult = await sendWorkshopSubscriptionNotification({
+				to: notificationEmail,
+				subscription: {
+					name: data.name,
+					email: data.email,
+					phone: data.phone.trim(),
+					...(participantCount != null ? { participantCount } : {}),
+					...(data.remarks ? { remarks: data.remarks } : {})
+				},
+				workshopTitle: session.workshopTitle || 'Workshop',
+				sessionDate,
+				sessionTime: session.time,
+				sessionLocation: session.location
+			});
+			if (!sendResult.success) {
+				console.error('Workshop subscription notification email failed:', sendResult.error);
+			}
+		}
 
 		return json({ success: true, id: result._id }, { status: 201 });
 	} catch (error: any) {

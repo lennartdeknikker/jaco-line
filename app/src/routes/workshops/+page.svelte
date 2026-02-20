@@ -276,6 +276,7 @@
 {/if}
 
 <style lang="scss">
+	@use 'sass:color';
 	@use '../../styles/variables' as *;
 
 	.page-header {
@@ -356,7 +357,7 @@
 	}
 
 	.workshop-image-placeholder {
-		background: linear-gradient(135deg, $color-border 0%, darken($color-border, 10%) 100%);
+		background: linear-gradient(135deg, $color-border 0%, color.adjust($color-border, $lightness: -10%) 100%);
 	}
 
 	.workshop-content {

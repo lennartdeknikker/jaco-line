@@ -39,6 +39,7 @@
 		"@sanity/image-url": "^2.0.3",
 		"@sanity/sveltekit": "^1.0.4",
 		"dotenv": "^16.4.1",
+		"resend": "^4.0.0",
 		"styled-components": "^6.3.8"
 	}
 }
