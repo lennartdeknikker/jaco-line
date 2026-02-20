@@ -123,6 +123,8 @@
 <svelte:head>
 	<title>Workshops - JacoLine</title>
 	<meta name="description" content="Schrijf je in voor een keramiek workshop bij JacoLine." />
+	<meta property="og:title" content="Workshops - JacoLine" />
+	<meta property="og:description" content="Schrijf je in voor een keramiek workshop bij JacoLine." />
 </svelte:head>
 
 <div class="page-header">

@@ -8,6 +8,8 @@
 <svelte:head>
 	<title>JacoLine - Handgemaakt Keramiek</title>
 	<meta name="description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
+	<meta property="og:title" content="JacoLine - Handgemaakt Keramiek" />
+	<meta property="og:description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
 </svelte:head>
 
 <section class="hero">

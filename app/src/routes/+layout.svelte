@@ -11,7 +11,24 @@
 	onMount(() => {
 		mounted = true;
 	});
+
+	const ogImage = `${data.origin}/android-chrome-512x512.png`;
+	const defaultTitle = 'JacoLine – Handgemaakt keramiek';
+	const defaultDescription = 'Ontdek handgemaakt keramiek van JacoLine. Workshops, evenementen en meer.';
 </script>
+
+<svelte:head>
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content={defaultTitle} />
+	<meta property="og:description" content={defaultDescription} />
+	<meta property="og:image" content={ogImage} />
+	<meta property="og:url" content={data.origin} />
+	<meta property="og:locale" content="nl_NL" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content={defaultTitle} />
+	<meta name="twitter:description" content={defaultDescription} />
+	<meta name="twitter:image" content={ogImage} />
+</svelte:head>
 
 {#if mounted}
 	<PreviewMode enabled={data.previewEnabled}>

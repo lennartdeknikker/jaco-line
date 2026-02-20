@@ -69,16 +69,6 @@ export async function sendWorkshopSubscriptionNotification(
 		...(subscription.remarks ? ['Opmerkingen: ' + subscription.remarks] : []),
 	];
 	const text = lines.join('\n');
-	const subject = `Workshop-inschrijving: ${workshopTitle} – ${subscription.name}`;
-
-	// Log for debugging delivery (from, to, subject, body preview)
-	console.log('[Workshop notification email]', {
-		from: fromAddress,
-		to: [to],
-		subject,
-		bodyLength: text.length,
-		bodyPreview: text.slice(0, 200) + (text.length > 200 ? '…' : ''),
-	});
 
 	const resend = new Resend(apiKey);
 
@@ -86,14 +76,13 @@ export async function sendWorkshopSubscriptionNotification(
 		const { error } = await resend.emails.send({
 			from: fromAddress,
 			to: [to],
-			subject,
+			subject: `Workshop-inschrijving: ${workshopTitle} – ${subscription.name}`,
 			text,
 		});
 		if (error) {
 			console.error('Resend error sending workshop subscription notification:', error);
 			return { success: false, error: error.message };
 		}
-		console.log('[Workshop notification email] sent successfully to', to);
 		return { success: true };
 	} catch (err: unknown) {
 		const message = err instanceof Error ? err.message : String(err);

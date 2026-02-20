@@ -131,6 +131,11 @@
 <svelte:head>
 	<title>{workshop ? `${workshop.title} - Workshops` : 'Workshop'} - JacoLine</title>
 	<meta name="description" content={workshop?.shortDescription ?? (workshop?.description?.slice(0, 160) ?? 'Workshop bij JacoLine')} />
+	<meta property="og:title" content={workshop ? `${workshop.title} - Workshops - JacoLine` : 'Workshop - JacoLine'} />
+	<meta property="og:description" content={workshop?.shortDescription ?? (workshop?.description?.slice(0, 160) ?? 'Workshop bij JacoLine')} />
+	{#if workshop?.mainImageUrl}
+		<meta property="og:image" content={workshop.mainImageUrl} />
+	{/if}
 </svelte:head>
 
 {#if !workshop}

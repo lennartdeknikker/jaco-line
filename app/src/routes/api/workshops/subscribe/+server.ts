@@ -119,16 +119,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}>(`*[_type == "siteSettings"][0]{ notificationEmail, workshopNotificationEnabled }`);
 		const rawNotificationEmail = settings?.notificationEmail?.trim();
 		const notificationEmail = rawNotificationEmail ? sanitizeEmailAddress(rawNotificationEmail) : '';
-		const willSendNotification =
-			!!settings?.workshopNotificationEnabled && !!notificationEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail);
-		if (!willSendNotification) {
-			console.log('[Workshop subscribe] notification email skipped', {
-				workshopNotificationEnabled: settings?.workshopNotificationEnabled,
-				hasNotificationEmail: !!notificationEmail,
-				notificationEmailValid: notificationEmail ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail) : false,
-			});
-		}
-		if (willSendNotification) {
+		if (settings?.workshopNotificationEnabled && notificationEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(notificationEmail)) {
 			const sessionDate = session.date
 				? new Date(session.date).toLocaleDateString('nl-NL', {
 						weekday: 'long',

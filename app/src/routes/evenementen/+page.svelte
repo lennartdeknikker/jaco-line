@@ -17,6 +17,8 @@
 <svelte:head>
 	<title>Evenementen - JacoLine</title>
 	<meta name="description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en evenementen." />
+	<meta property="og:title" content="Evenementen - JacoLine" />
+	<meta property="og:description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en evenementen." />
 </svelte:head>
 
 <div class="page-header">

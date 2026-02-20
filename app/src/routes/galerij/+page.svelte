@@ -17,6 +17,8 @@
 <svelte:head>
 	<title>Galerij - JacoLine</title>
 	<meta name="description" content="Bekijk de collectie handgemaakt keramiek van JacoLine." />
+	<meta property="og:title" content="Galerij - JacoLine" />
+	<meta property="og:description" content="Bekijk de collectie handgemaakt keramiek van JacoLine." />
 </svelte:head>
 
 <div class="page-header">

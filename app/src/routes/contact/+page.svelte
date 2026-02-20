@@ -74,6 +74,8 @@
 <svelte:head>
 	<title>Contact - JacoLine</title>
 	<meta name="description" content="Neem contact op met JacoLine voor vragen over keramiek of workshops." />
+	<meta property="og:title" content="Contact - JacoLine" />
+	<meta property="og:description" content="Neem contact op met JacoLine voor vragen over keramiek of workshops." />
 </svelte:head>
 
 <div class="page-header">

@@ -69,6 +69,8 @@
 <svelte:head>
 	<title>Nieuwsbrief - JacoLine</title>
 	<meta name="description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe evenementen en workshops." />
+	<meta property="og:title" content="Nieuwsbrief - JacoLine" />
+	<meta property="og:description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe evenementen en workshops." />
 </svelte:head>
 
 <div class="page-header">
