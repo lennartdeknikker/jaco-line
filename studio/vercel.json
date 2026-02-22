@@ -1,0 +1,11 @@
+{
+	"buildCommand": "pnpm --filter studio build",
+	"installCommand": "pnpm install",
+	"outputDirectory": "dist",
+	"rewrites": [
+		{
+			"source": "/(.*)",
+			"destination": "/$1"
+		}
+	]
+}

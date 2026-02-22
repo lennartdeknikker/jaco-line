@@ -1,0 +1,199 @@
+import { defineField, defineType } from 'sanity';
+
+export default defineType({
+	name: 'siteSettings',
+	title: 'Site Instellingen',
+	type: 'document',
+	__experimental_actions: ['update', 'publish'], // Only allow update and publish, not create/delete
+	fields: [
+		defineField({
+			name: 'title',
+			title: 'Titel',
+			type: 'string',
+			initialValue: 'Site Instellingen',
+			readOnly: true,
+		}),
+		defineField({
+			name: 'notificationEmail',
+			title: 'E-mailadres voor meldingen',
+			type: 'string',
+			description: 'Alle meldingen (workshop, contactformulier, nieuwsbrief) worden naar dit adres gestuurd. Laat leeg om geen e-mails te ontvangen.',
+			validation: (Rule) => Rule.email(),
+		}),
+		defineField({
+			name: 'workshopNotificationEnabled',
+			title: 'E-mail bij workshop-inschrijving',
+			type: 'boolean',
+			description: 'Ontvang een e-mail bij elke workshop-inschrijving.',
+			initialValue: false,
+		}),
+		defineField({
+			name: 'contactFormNotificationEnabled',
+			title: 'E-mail bij contactformulier',
+			type: 'boolean',
+			description: 'Ontvang een e-mail bij elke inzending via het contactformulier.',
+			initialValue: false,
+		}),
+		defineField({
+			name: 'newsletterNotificationEnabled',
+			title: 'E-mail bij nieuwsbrief-inschrijving',
+			type: 'boolean',
+			description: 'Ontvang een e-mail bij elke nieuwsbrief-inschrijving.',
+			initialValue: false,
+		}),
+		defineField({
+			name: 'contactInfo',
+			title: 'Contactgegevens',
+			type: 'object',
+			fields: [
+				defineField({
+					name: 'email',
+					title: 'E-mail',
+					type: 'string',
+					validation: (Rule) => Rule.required().email(),
+				}),
+				defineField({
+					name: 'phone',
+					title: 'Telefoonnummer',
+					type: 'string',
+					description: 'Optioneel',
+				}),
+			],
+		}),
+		defineField({
+			name: 'heroBackgroundImage',
+			title: 'Hero achtergrond (homepagina)',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Afbeelding achter de hero op de homepagina. Wordt getoond met een transparante gradient.',
+		}),
+		defineField({
+			name: 'heroLogoImage',
+			title: 'Logo afbeelding (footer)',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Logo dat rechts in de footer wordt getoond (zelfde als in de home-header).',
+		}),
+		defineField({
+			name: 'aboutSection',
+			title: 'Over mij (homepagina)',
+			type: 'object',
+			description: 'Optioneel blok boven "Komende evenementen" op de homepagina.',
+			fields: [
+				defineField({
+					name: 'title',
+					title: 'Titel',
+					type: 'string',
+					description: 'Bijv. "Over mij"',
+				}),
+				defineField({
+					name: 'text',
+					title: 'Tekst',
+					type: 'text',
+				}),
+				defineField({
+					name: 'image',
+					title: 'Foto (optioneel)',
+					type: 'image',
+					options: { hotspot: true },
+				}),
+			],
+		}),
+		defineField({
+			name: 'pageHeaders',
+			title: 'Introteksten pagina-headers',
+			type: 'object',
+			description: 'Korte introductietekst onder de titel in de header van elke pagina.',
+			fields: [
+				defineField({
+					name: 'homeSubtitle',
+					title: 'Home – ondertitel',
+					type: 'text',
+				}),
+				defineField({
+					name: 'workshopsIntro',
+					title: 'Workshops – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'evenementenIntro',
+					title: 'Evenementen – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'galerijIntro',
+					title: 'Galerij – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'contactIntro',
+					title: 'Contact – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'newsletterIntro',
+					title: 'Nieuwsbrief – intro',
+					type: 'text',
+				}),
+			],
+		}),
+		defineField({
+			name: 'socialLinks',
+			title: 'Social Media Links',
+			type: 'array',
+			of: [
+				{
+					type: 'object',
+					fields: [
+						defineField({
+							name: 'platform',
+							title: 'Platform',
+							type: 'string',
+							options: {
+								list: [
+									{ title: 'Instagram', value: 'instagram' },
+									{ title: 'Facebook', value: 'facebook' },
+									{ title: 'X', value: 'x' },
+									{ title: 'LinkedIn', value: 'linkedin' },
+									{ title: 'Pinterest', value: 'pinterest' },
+									{ title: 'TikTok', value: 'tiktok' },
+								],
+							},
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({
+							name: 'url',
+							title: 'URL',
+							type: 'url',
+							validation: (Rule) => Rule.required(),
+						}),
+						defineField({
+							name: 'label',
+							title: 'Label (optioneel)',
+							type: 'string',
+							description: 'Bijvoorbeeld: @jacoline_keramiek',
+						}),
+					],
+					preview: {
+						select: {
+							platform: 'platform',
+							url: 'url',
+							label: 'label',
+						},
+						prepare({ platform, url, label }) {
+							return {
+								title: platform ? platform.charAt(0).toUpperCase() + platform.slice(1) : 'Social Link',
+								subtitle: label || url,
+							};
+						},
+					},
+				},
+			],
+		}),
+	],
+	preview: {
+		select: {
+			title: 'title',
+		},
+	},
+});
