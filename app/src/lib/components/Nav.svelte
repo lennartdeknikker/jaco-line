@@ -32,11 +32,6 @@
 			</button>
 			<ul class="nav-links" class:open={mobileMenuOpen && mounted}>
 				<li>
-					<a href="/" class:active={$page.url.pathname === '/'} onclick={closeMobileMenu}
-						>Home</a
-					>
-				</li>
-				<li>
 					<a
 						href="/evenementen"
 						class:active={$page.url.pathname === '/evenementen'}

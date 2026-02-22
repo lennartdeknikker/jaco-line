@@ -19,6 +19,12 @@ export default defineType({
 			validation: (Rule) => Rule.required(),
 		}),
 		defineField({
+			name: 'dateEnd',
+			title: 'Einddatum (optioneel)',
+			type: 'date',
+			description: 'Vul in bij een workshop van meerdere dagen. Laat leeg bij een eendaagse workshop.',
+		}),
+		defineField({
 			name: 'time',
 			title: 'Tijd',
 			type: 'string',

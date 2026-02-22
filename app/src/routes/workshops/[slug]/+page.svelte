@@ -119,13 +119,13 @@
 		error = 'CAPTCHA verificatie mislukt. Probeer het opnieuw.';
 	}
 
-	const workshop = data.workshop as WorkshopDetail | null;
-	const galleryImages = workshop?.mainImageUrl
+	const workshop = $derived(data.workshop as WorkshopDetail | null);
+	const galleryImages = $derived(workshop?.mainImageUrl
 		? [
 				{ url: workshop.mainImageUrl, alt: workshop.title },
 				...(workshop.imageUrls ?? []).map((img) => ({ url: img.url, alt: img.alt || workshop.title }))
 			].filter((img) => img.url)
-		: (workshop?.imageUrls ?? []).filter((img) => img.url).map((img) => ({ url: img.url!, alt: img.alt || (workshop?.title ?? '') }));
+		: (workshop?.imageUrls ?? []).filter((img) => img.url).map((img) => ({ url: img.url!, alt: img.alt || (workshop?.title ?? '') })));
 </script>
 
 <svelte:head>
@@ -191,13 +191,24 @@
 			{#if workshop.sessions.length > 0}
 				<div class="sessions-list">
 					{#each workshop.sessions as session (session._id)}
+						{@const dateEnd = session.dateEnd}
+						{@const hasEnd = Boolean(dateEnd && dateEnd !== session.date)}
 						<div class="session-card">
-							<div class="session-date">
-								<span class="day">{new Date(session.date).getDate()}</span>
-								<span class="month">{new Date(session.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+							<div class="session-dates">
+								<div class="session-date">
+									<span class="weekday">{new Date(session.date).toLocaleDateString('nl-NL', { weekday: 'short' })}</span>
+									<span class="day">{new Date(session.date).getDate()}</span>
+									<span class="month">{new Date(session.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+								</div>
+								{#if hasEnd && dateEnd}
+									<div class="session-date">
+										<span class="weekday">{new Date(dateEnd).toLocaleDateString('nl-NL', { weekday: 'short' })}</span>
+										<span class="day">{new Date(dateEnd).getDate()}</span>
+										<span class="month">{new Date(dateEnd).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+									</div>
+								{/if}
 							</div>
 							<div class="session-details">
-								<p class="session-date-text">{formatDate(session.date)}</p>
 								{#if session.time}
 									<p class="session-meta"><strong>Tijd:</strong> {session.time}</p>
 								{/if}
@@ -411,6 +422,13 @@
 		border: 1px solid $color-border;
 	}
 
+	.session-dates {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-sm;
+		flex-shrink: 0;
+	}
+
 	.session-date {
 		display: flex;
 		flex-direction: column;
@@ -422,8 +440,15 @@
 		border-radius: $border-radius-md;
 		padding: $spacing-md;
 
+		.weekday {
+			font-size: 0.7rem;
+			text-transform: uppercase;
+			opacity: 0.95;
+			margin-bottom: 2px;
+		}
+
 		.day {
-			font-size: 2rem;
+			font-size: 1.75rem;
 			font-weight: $font-weight-bold;
 			line-height: 1;
 		}
@@ -432,16 +457,12 @@
 			font-size: $font-size-small;
 			text-transform: uppercase;
 			margin-top: $spacing-xs;
+			text-align: center;
 		}
 	}
 
 	.session-details {
 		flex: 1;
-	}
-
-	.session-date-text {
-		margin: 0 0 $spacing-xs 0;
-		color: $color-text;
 	}
 
 	.session-meta {

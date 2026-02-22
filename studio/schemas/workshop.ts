@@ -30,7 +30,7 @@ export default defineType({
 		defineField({
 			name: 'shortDescription',
 			title: 'Korte beschrijving',
-			type: 'string',
+			type: 'text',
 			description: 'Korte tekst voor op de overzichtspagina (optioneel).',
 		}),
 		defineField({

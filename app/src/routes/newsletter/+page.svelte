@@ -1,6 +1,9 @@
 <script lang="ts">
+	import type { PageProps } from './$types';
 	import Button from '$lib/components/Button.svelte';
 	import Turnstile from '$lib/components/Turnstile.svelte';
+
+	const { data }: PageProps = $props();
 
 	let formData = $state({
 		name: '',
@@ -76,7 +79,7 @@
 <div class="page-header">
 	<div class="container">
 		<h1>Nieuwsbrief</h1>
-		<p>Blijf op de hoogte van nieuwe evenementen, workshops en werk</p>
+		<p>{data?.pageHeaders?.newsletterIntro ?? 'Blijf op de hoogte van nieuwe evenementen, workshops en werk'}</p>
 	</div>
 </div>
 

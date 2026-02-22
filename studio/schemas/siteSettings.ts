@@ -61,6 +61,83 @@ export default defineType({
 			],
 		}),
 		defineField({
+			name: 'heroBackgroundImage',
+			title: 'Hero achtergrond (homepagina)',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Afbeelding achter de hero op de homepagina. Wordt getoond met een transparante gradient.',
+		}),
+		defineField({
+			name: 'heroLogoImage',
+			title: 'Logo afbeelding (footer)',
+			type: 'image',
+			options: { hotspot: true },
+			description: 'Logo dat rechts in de footer wordt getoond (zelfde als in de home-header).',
+		}),
+		defineField({
+			name: 'aboutSection',
+			title: 'Over mij (homepagina)',
+			type: 'object',
+			description: 'Optioneel blok boven "Komende evenementen" op de homepagina.',
+			fields: [
+				defineField({
+					name: 'title',
+					title: 'Titel',
+					type: 'string',
+					description: 'Bijv. "Over mij"',
+				}),
+				defineField({
+					name: 'text',
+					title: 'Tekst',
+					type: 'text',
+				}),
+				defineField({
+					name: 'image',
+					title: 'Foto (optioneel)',
+					type: 'image',
+					options: { hotspot: true },
+				}),
+			],
+		}),
+		defineField({
+			name: 'pageHeaders',
+			title: 'Introteksten pagina-headers',
+			type: 'object',
+			description: 'Korte introductietekst onder de titel in de header van elke pagina.',
+			fields: [
+				defineField({
+					name: 'homeSubtitle',
+					title: 'Home – ondertitel',
+					type: 'text',
+				}),
+				defineField({
+					name: 'workshopsIntro',
+					title: 'Workshops – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'evenementenIntro',
+					title: 'Evenementen – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'galerijIntro',
+					title: 'Galerij – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'contactIntro',
+					title: 'Contact – intro',
+					type: 'text',
+				}),
+				defineField({
+					name: 'newsletterIntro',
+					title: 'Nieuwsbrief – intro',
+					type: 'text',
+				}),
+			],
+		}),
+		defineField({
 			name: 'socialLinks',
 			title: 'Social Media Links',
 			type: 'array',

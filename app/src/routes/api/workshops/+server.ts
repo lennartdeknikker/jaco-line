@@ -23,6 +23,7 @@ export const GET: RequestHandler = async () => {
 				_id,
 				_type,
 				date,
+				dateEnd,
 				time,
 				location,
 				price,

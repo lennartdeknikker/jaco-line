@@ -24,7 +24,7 @@
 <div class="page-header">
 	<div class="container">
 		<h1>Evenementen</h1>
-		<p>Kom langs bij mijn marktkraam op deze evenementen</p>
+		<p>{(data as any).pageHeaders?.evenementenIntro || 'Kom langs bij mijn marktkraam op deze evenementen'}</p>
 	</div>
 </div>
 

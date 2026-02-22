@@ -130,7 +130,10 @@
 <div class="page-header">
 	<div class="container">
 		<h1>Workshops</h1>
-		<p>Leer keramiek maken in een van mijn workshops</p>
+		<p>{(data as any).pageHeaders?.workshopsIntro || 'Leer keramiek maken in een van mijn workshops'}</p>
+		<div class="page-header-cta">
+			<Button href="/contact" variant="secondary">Workshop op maat? Neem contact op</Button>
+		</div>
 	</div>
 </div>
 
@@ -149,6 +152,7 @@
 						{:else if w.description}
 							<p class="workshop-short-description">{w.description.slice(0, 150)}{w.description.length > 150 ? '…' : ''}</p>
 						{/if}
+						<a href="/workshops/{w.slug?.current ?? w._id}" class="link-more">Meer info en foto's →</a>
 					</div>
 					<a href="/workshops/{w.slug?.current ?? w._id}" class="workshop-image-link">
 						{#if w.mainImageUrl}
@@ -161,38 +165,52 @@
 						<div class="sessions-list">
 							<h3>Beschikbare data</h3>
 							{#each w.sessions as session (session._id)}
+								{@const dateEnd = session.dateEnd}
+								{@const hasEnd = dateEnd && dateEnd !== session.date}
 								<div class="session-row">
-									<div class="session-date">
-										<span class="day">{new Date(session.date).getDate()}</span>
-										<span class="month">{new Date(session.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+									<div class="session-dates">
+										<div class="session-date">
+											<span class="weekday">{new Date(session.date).toLocaleDateString('nl-NL', { weekday: 'short' })}</span>
+											<span class="day">{new Date(session.date).getDate()}</span>
+											<span class="month">{new Date(session.date).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+										</div>
+										{#if hasEnd && dateEnd}
+											<div class="session-date">
+												<span class="weekday">{new Date(dateEnd).toLocaleDateString('nl-NL', { weekday: 'short' })}</span>
+												<span class="day">{new Date(dateEnd).getDate()}</span>
+												<span class="month">{new Date(dateEnd).toLocaleDateString('nl-NL', { month: 'short' })}</span>
+											</div>
+										{/if}
 									</div>
 									<div class="session-details">
-										<p class="session-date-text">{formatDate(session.date)}</p>
-										{#if session.time}
-											<p class="session-meta"><strong>Tijd:</strong> {session.time}</p>
-										{/if}
-										<p class="session-meta"><strong>Locatie:</strong> {session.location}</p>
-										{#if getSessionPrice(session, w.defaultPrice) != null}
-											<p class="session-meta"><strong>Prijs:</strong> €{getSessionPrice(session, w.defaultPrice)}</p>
-										{/if}
-										{#if session.maxParticipants != null}
-											<p class="session-meta">
-												<strong>Deelnemers:</strong> {session.currentParticipants ?? 0} / {session.maxParticipants}
-												{#if session.isFull}
-													<span class="full-badge">VOL</span>
-												{/if}
-											</p>
-										{/if}
-										{#if session.isFull}
-											<Button variant="primary" disabled={true}>Vol</Button>
-										{:else}
-											<Button variant="primary" onClick={() => openForm(session, w.title)}>Inschrijven</Button>
-										{/if}
+										<div class="session-meta-group">
+											{#if session.time}
+												<p class="session-meta"><strong>Tijd:</strong> {session.time}</p>
+											{/if}
+											<p class="session-meta"><strong>Locatie:</strong> {session.location}</p>
+											{#if getSessionPrice(session, w.defaultPrice) != null}
+												<p class="session-meta"><strong>Prijs:</strong> €{getSessionPrice(session, w.defaultPrice)}</p>
+											{/if}
+											{#if session.maxParticipants != null}
+												<p class="session-meta">
+													<strong>Deelnemers:</strong> {session.currentParticipants ?? 0} / {session.maxParticipants}
+													{#if session.isFull}
+														<span class="full-badge">VOL</span>
+													{/if}
+												</p>
+											{/if}
+										</div>
+										<div class="session-action">
+											{#if session.isFull}
+												<Button variant="primary" disabled={true}>Vol</Button>
+											{:else}
+												<Button variant="primary" onClick={() => openForm(session, w.title)}>Inschrijven</Button>
+											{/if}
+										</div>
 									</div>
 								</div>
 							{/each}
 						</div>
-						<a href="/workshops/{w.slug?.current ?? w._id}" class="link-more">Meer info en foto's →</a>
 					</div>
 				</article>
 			{/each}
@@ -297,6 +315,10 @@
 		font-size: $font-size-large;
 	}
 
+	.page-header-cta {
+		margin-top: $spacing-lg;
+	}
+
 	.workshops-list {
 		display: flex;
 		flex-direction: column;
@@ -352,7 +374,6 @@
 		width: 100%;
 		height: auto;
 		display: block;
-		vertical-align: middle;
 	}
 
 	.workshop-image-placeholder {
@@ -415,6 +436,17 @@
 		&:last-child {
 			border-bottom: none;
 		}
+
+		@media (min-width: $breakpoint-md) {
+			align-items: center;
+		}
+	}
+
+	.session-dates {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-sm;
+		flex-shrink: 0;
 	}
 
 	.session-date {
@@ -422,14 +454,22 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
 		min-width: 70px;
 		background: $color-primary;
 		color: white;
 		border-radius: $border-radius-md;
 		padding: $spacing-sm;
 
+		.weekday {
+			font-size: 0.7rem;
+			text-transform: uppercase;
+			opacity: 0.95;
+			margin-bottom: 2px;
+		}
+
 		.day {
-			font-size: 1.75rem;
+			font-size: 1.5rem;
 			font-weight: $font-weight-bold;
 			line-height: 1;
 		}
@@ -438,16 +478,39 @@
 			font-size: $font-size-small;
 			text-transform: uppercase;
 			margin-top: $spacing-xs;
+			text-align: center;
 		}
 	}
 
 	.session-details {
 		flex: 1;
+		min-width: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		gap: $spacing-sm;
+
+		@media (min-width: $breakpoint-md) {
+			flex-wrap: nowrap;
+			align-items: center;
+		}
 	}
 
-	.session-date-text {
-		color: $color-text-light;
-		margin: 0 0 $spacing-xs 0;
+	.session-meta-group {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.session-action {
+		width: 100%;
+		margin-top: $spacing-xs;
+
+		@media (min-width: $breakpoint-md) {
+			width: auto;
+			margin-top: 0;
+			margin-left: auto;
+			flex-shrink: 0;
+		}
 	}
 
 	.session-meta {
@@ -470,7 +533,8 @@
 	}
 
 	.link-more {
-		margin-top: auto;
+		display: inline-block;
+		margin-top: $spacing-sm;
 		color: $color-primary;
 		font-weight: $font-weight-medium;
 		text-decoration: none;

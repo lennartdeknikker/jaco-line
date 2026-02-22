@@ -81,7 +81,7 @@
 <div class="page-header">
 	<div class="container">
 		<h1>Contact</h1>
-		<p>Heb je een vraag? Neem gerust contact op!</p>
+		<p>{(data as any).pageHeaders?.contactIntro || 'Heb je een vraag? Neem gerust contact op!'}</p>
 	</div>
 </div>
 

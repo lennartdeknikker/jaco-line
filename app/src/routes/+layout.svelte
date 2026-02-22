@@ -12,7 +12,7 @@
 		mounted = true;
 	});
 
-	const ogImage = `${data.origin}/android-chrome-512x512.png`;
+	const ogImage = $derived(`${data.origin}/android-chrome-512x512.png`);
 	const defaultTitle = 'JacoLine – Handgemaakt keramiek';
 	const defaultDescription = 'Ontdek handgemaakt keramiek van JacoLine. Workshops, evenementen en meer.';
 </script>
@@ -37,7 +37,7 @@
 			<main>
 				{@render children()}
 			</main>
-			<Footer socialLinks={data.socialLinks} />
+			<Footer socialLinks={data.socialLinks} logoImageUrl={(data as any).heroLogoImageUrl} />
 		</VisualEditing>
 	</PreviewMode>
 {:else}
@@ -45,7 +45,7 @@
 	<main>
 		{@render children()}
 	</main>
-	<Footer socialLinks={data.socialLinks} />
+	<Footer socialLinks={data.socialLinks} logoImageUrl={(data as any).heroLogoImageUrl} />
 {/if}
 
 

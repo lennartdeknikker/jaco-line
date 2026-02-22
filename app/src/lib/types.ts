@@ -39,6 +39,7 @@ export interface WorkshopSession {
 	_type: 'workshopSession';
 	workshop: { _ref: string } | WorkshopType;
 	date: string;
+	dateEnd?: string;
 	time?: string;
 	location: string;
 	price?: number;

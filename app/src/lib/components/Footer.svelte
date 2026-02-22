@@ -1,12 +1,14 @@
 <script lang="ts">
 	interface Props {
 		socialLinks?: Array<{ platform: string; url: string; label?: string }>;
+		logoImageUrl?: string | null;
 	}
 
-	const { socialLinks: socialLinksProp = [] }: Props = $props();
+	const { socialLinks: socialLinksProp = [], logoImageUrl = null }: Props = $props();
 	const socialLinks = $derived(socialLinksProp);
+	const logoUrl = $derived(logoImageUrl);
 
-	const getPlatformIcon = (platform: string): string => `/icons/${platform}.svg`
+	const getPlatformIcon = (platform: string): string => `/icons/${platform}.svg`;
 
 	function getPlatformLabel(platform: string, label?: string): string {
 		if (label) return label;
@@ -31,7 +33,7 @@
 					<li><a href="/contact">Contact</a></li>
 				</ul>
 			</div>
-			<div class="footer-section">
+			<div class="footer-section footer-section-social">
 				<h4>Volg mij</h4>
 				{#if socialLinks.length > 0}
 					<div class="social-links">
@@ -53,6 +55,11 @@
 					</div>
 				{/if}
 			</div>
+			{#if logoUrl}
+				<div class="footer-section footer-section-logo">
+					<img src={logoUrl} alt="JacoLine" class="footer-logo" />
+				</div>
+			{/if}
 		</div>
 		<div class="footer-bottom">
 			<p>&copy; {new Date().getFullYear()} JacoLine. Alle rechten voorbehouden.</p>
@@ -75,6 +82,25 @@
 		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		gap: $spacing-xl;
 		margin-bottom: $spacing-xl;
+		align-items: start;
+
+		.footer-section-logo {
+			justify-self: start;
+
+			@media (min-width: $breakpoint-lg) {
+				justify-self: end;
+				grid-column: -1;
+			}
+		}
+
+		.footer-logo {
+			width: 120px;
+			height: 120px;
+			object-fit: contain;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.1);
+			padding: 4px;
+		}
 	}
 
 	.footer-section {

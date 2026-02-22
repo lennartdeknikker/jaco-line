@@ -24,7 +24,7 @@
 <div class="page-header">
 	<div class="container">
 		<h1>Galerij</h1>
-		<p>Een overzicht van mijn handgemaakte keramiek</p>
+		<p>{(data as any).pageHeaders?.galerijIntro || 'Een overzicht van mijn handgemaakte keramiek'}</p>
 	</div>
 </div>
 

@@ -12,18 +12,55 @@
 	<meta property="og:description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
 </svelte:head>
 
-<section class="hero">
+<section
+	class="hero"
+	style={(() => {
+		const d = data as any;
+		const url = d?.heroBackgroundImageUrl;
+		if (!url) return '';
+		const fp = d?.heroBackgroundImageFocalPoint;
+		const x = fp ? Math.round((fp.x ?? 0.5) * 100) : 50;
+		const y = fp ? Math.round((fp.y ?? 0.5) * 100) : 50;
+		return `--hero-bg: url(${url}); --hero-focus-x: ${x}%; --hero-focus-y: ${y}%;`;
+	})()}
+>
 	<div class="container">
 		<div class="hero-content">
-			<img src="/images/jaco-line-logo.png" alt="JacoLine" class="hero-logo" />
-			<p class="subtitle">Handgemaakt keramiek met passie en aandacht voor detail</p>
+			<p class="subtitle">{(data as any).pageHeaders?.homeSubtitle || 'Handgemaakt keramiek met passie en aandacht voor detail'}</p>
 			<div class="hero-actions">
-				<Button href="/evenementen" variant="primary">Bekijk evenementen</Button>
-				<Button href="/galerij" variant="secondary">Bekijk werk</Button>
+				<Button href="/workshops" variant="primary">Workshops</Button>
+				<Button href="/evenementen" variant="secondary">Evenementen</Button>
 			</div>
 		</div>
 	</div>
 </section>
+
+{#if (data as any).aboutSection?.title || (data as any).aboutSection?.text || (data as any).aboutSection?.imageUrl}
+	{@const about = (data as any).aboutSection}
+	<section class="about-section">
+		<div class="container">
+			<div class="about-inner">
+				{#if about?.imageUrl}
+					<div class="about-image">
+						<img src={about.imageUrl} alt="Over mij" />
+					</div>
+				{/if}
+				<div class="about-content">
+					{#if about?.title}
+						<h2>{about.title}</h2>
+					{/if}
+					{#if about?.text}
+						<div class="about-text">
+							{#each about.text.split(/\n\n+/).filter(Boolean) as paragraph}
+								<p>{paragraph.replace(/\n/g, ' ')}</p>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			</div>
+		</div>
+	</section>
+{/if}
 
 <section class="featured-events">
 	<div class="container">
@@ -90,9 +127,25 @@
 	@use '../styles/variables' as *;
 
 	.hero {
-		background: linear-gradient(135deg, $color-accent 0%, $color-secondary 100%);
+		position: relative;
 		padding: $spacing-3xl 0;
 		text-align: center;
+		background: linear-gradient(135deg, $color-accent 0%, $color-secondary 100%);
+
+		&[style*='--hero-bg'] {
+			background-image: linear-gradient(
+				to bottom,
+				rgba(0, 0, 0, 0) 0%,
+				rgba(0, 0, 0, 0.4) 60%,
+				rgba(0, 0, 0, 0.85) 100%
+			), var(--hero-bg);
+			background-size: cover;
+			background-position: var(--hero-focus-x, 50%) var(--hero-focus-y, 50%);
+		}
+
+		@media (min-width: $breakpoint-lg) {
+			padding: 16rem 0;
+		}
 
 		@media (max-width: $breakpoint-md) {
 			padding: $spacing-2xl 0;
@@ -102,24 +155,13 @@
 	.hero-content {
 		max-width: 800px;
 		margin: 0 auto;
+		position: relative;
+		z-index: 1;
 	}
 
-	.hero-logo {
-		max-width: 300px;
-		width: 300px;
-		height: 300px;
-		margin: 0 auto $spacing-md;
-		display: block;
-		padding: 2px;
-		background: rgba(255, 255, 255, 0.1);
-		border-radius: 50%;
-		object-fit: contain;
-
-		@media (max-width: $breakpoint-md) {
-			max-width: 280px;
-			width: 280px;
-			height: 280px;
-		}
+	.hero[style*='--hero-bg'] .subtitle {
+		color: rgba(255, 255, 255, 0.95);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 	}
 
 	.subtitle {
@@ -133,6 +175,69 @@
 		gap: $spacing-md;
 		justify-content: center;
 		flex-wrap: wrap;
+	}
+
+	.about-section {
+		padding: $spacing-3xl 0;
+
+		@media (max-width: $breakpoint-md) {
+			padding: $spacing-2xl 0;
+		}
+	}
+
+	.about-inner {
+		display: flex;
+		gap: $spacing-2xl;
+		flex-wrap: wrap;
+		align-items: start;
+		max-width: 900px;
+		margin: 0 auto;
+
+		@media (max-width: $breakpoint-md) {
+			gap: $spacing-xl;
+		}
+	}
+
+	.about-image {
+		width: 280px;
+		flex-shrink: 0;
+
+		@media (max-width: $breakpoint-md) {
+			width: 100%;
+			max-width: 320px;
+			margin: 0 auto;
+		}
+
+		img {
+			width: 100%;
+			height: auto;
+			display: block;
+			border-radius: $border-radius-lg;
+			object-fit: cover;
+		}
+	}
+
+	.about-content {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.about-content h2 {
+		margin: 0 0 $spacing-md 0;
+		color: $color-primary;
+	}
+
+	.about-text {
+		color: $color-text-light;
+		line-height: $line-height-base;
+
+		p {
+			margin: 0 0 $spacing-md 0;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
 	}
 
 	.featured-events,
@@ -217,7 +322,6 @@
 			width: 100%;
 			height: auto;
 			display: block;
-			vertical-align: middle;
 		}
 	}
 
