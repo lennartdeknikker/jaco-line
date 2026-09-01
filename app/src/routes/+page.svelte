@@ -7,9 +7,9 @@
 
 <svelte:head>
 	<title>JacoLine - Handgemaakt Keramiek</title>
-	<meta name="description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
+	<meta name="description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende markten." />
 	<meta property="og:title" content="JacoLine - Handgemaakt Keramiek" />
-	<meta property="og:description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende evenementen." />
+	<meta property="og:description" content="Ontdek handgemaakt keramiek van JacoLine. Bezoek onze marktkraam op verschillende markten." />
 </svelte:head>
 
 <section
@@ -29,7 +29,7 @@
 			<p class="subtitle">{(data as any).pageHeaders?.homeSubtitle || 'Handgemaakt keramiek met passie en aandacht voor detail'}</p>
 			<div class="hero-actions">
 				<Button href="/workshops" variant="primary">Workshops</Button>
-				<Button href="/evenementen" variant="secondary">Evenementen</Button>
+				<Button href="/markten" variant="secondary">Markten</Button>
 			</div>
 		</div>
 	</div>
@@ -64,7 +64,7 @@
 
 <section class="featured-events">
 	<div class="container">
-		<h2>Komende evenementen</h2>
+		<h2>Komende markten</h2>
 		{#if data.events.length > 0}
 			<div class="events-grid">
 				{#each data.events as event}
@@ -91,10 +91,10 @@
 				{/each}
 			</div>
 			<div class="section-actions">
-				<Button href="/evenementen">Alle evenementen</Button>
+				<Button href="/markten">Alle markten</Button>
 			</div>
 		{:else}
-			<p>Binnenkort meer evenementen!</p>
+			<p>Binnenkort meer markten!</p>
 		{/if}
 	</div>
 </section>
@@ -105,13 +105,13 @@
 		{#if data.images.length > 0}
 			<div class="gallery-grid">
 				{#each data.images as image}
-					<a href="/galerij" class="gallery-item">
+					<a href="/fotos" class="gallery-item">
 						<img src={image.imageUrl || '/images/foto1.jpg'} alt={image.alt || 'Keramiek werk'} />
 					</a>
 				{/each}
 			</div>
 			<div class="section-actions">
-				<Button href="/galerij">Bekijk volledige galerij</Button>
+				<Button href="/fotos">Bekijk alle foto's</Button>
 			</div>
 		{:else}
 			<div class="gallery-grid">

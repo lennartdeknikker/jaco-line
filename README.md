@@ -150,8 +150,8 @@ src/
 │   └── types.ts           # TypeScript types
 ├── routes/
 │   ├── api/            # API endpoints
-│   ├── evenementen/    # Events page
-│   ├── galerij/        # Gallery page
+│   ├── markten/        # Markets page
+│   ├── fotos/          # Photos page
 │   ├── workshops/      # Workshops page
 │   ├── contact/        # Contact page
 │   └── newsletter/     # Newsletter page

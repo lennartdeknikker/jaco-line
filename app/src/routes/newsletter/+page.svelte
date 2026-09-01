@@ -71,15 +71,15 @@
 
 <svelte:head>
 	<title>Nieuwsbrief - JacoLine</title>
-	<meta name="description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe evenementen en workshops." />
+	<meta name="description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe markten en workshops." />
 	<meta property="og:title" content="Nieuwsbrief - JacoLine" />
-	<meta property="og:description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe evenementen en workshops." />
+	<meta property="og:description" content="Schrijf je in voor de nieuwsbrief van JacoLine en blijf op de hoogte van nieuwe markten en workshops." />
 </svelte:head>
 
 <div class="page-header">
 	<div class="container">
 		<h1>Nieuwsbrief</h1>
-		<p>{data?.pageHeaders?.newsletterIntro ?? 'Blijf op de hoogte van nieuwe evenementen, workshops en werk'}</p>
+		<p>{data?.pageHeaders?.newsletterIntro ?? 'Blijf op de hoogte van nieuwe markten, workshops en werk'}</p>
 	</div>
 </div>
 
@@ -94,7 +94,7 @@
 			<div class="newsletter-info">
 				<h2>Schrijf je in</h2>
 				<p>
-					Ontvang updates over nieuwe evenementen waar je mijn werk kunt vinden, aankomende
+					Ontvang updates over nieuwe markten waar je mijn werk kunt vinden, aankomende
 					workshops en het laatste nieuws over mijn keramiek.
 				</p>
 			</div>

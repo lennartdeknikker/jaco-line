@@ -1,8 +1,12 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import type { GalleryImage } from '$lib/types';
+	import type { GalleryImage, PhotoCategory } from '$lib/types';
 
 	const { data }: PageProps = $props();
+
+	const category = $derived(data.category as PhotoCategory);
+	const images = $derived(data.images as GalleryImage[]);
+
 	let selectedImage = $state<GalleryImage | null>(null);
 
 	function openLightbox(image: GalleryImage) {
@@ -15,23 +19,33 @@
 </script>
 
 <svelte:head>
-	<title>Galerij - JacoLine</title>
-	<meta name="description" content="Bekijk de collectie handgemaakt keramiek van JacoLine." />
-	<meta property="og:title" content="Galerij - JacoLine" />
-	<meta property="og:description" content="Bekijk de collectie handgemaakt keramiek van JacoLine." />
+	<title>{category.name} - Foto's - JacoLine</title>
+	<meta
+		name="description"
+		content={category.description || `Foto's uit de categorie ${category.name} van JacoLine.`}
+	/>
+	<meta property="og:title" content="{category.name} - Foto's - JacoLine" />
+	<meta
+		property="og:description"
+		content={category.description || `Foto's uit de categorie ${category.name} van JacoLine.`}
+	/>
 </svelte:head>
 
 <div class="page-header">
 	<div class="container">
-		<h1>Galerij</h1>
-		<p>{(data as any).pageHeaders?.galerijIntro || 'Een overzicht van mijn handgemaakte keramiek'}</p>
+		<h1>{category.name}</h1>
+		{#if category.description}
+			<p>{category.description}</p>
+		{/if}
 	</div>
 </div>
 
 <div class="container">
-	{#if data.images.length > 0}
+	<a href="/fotos" class="back-link">← Alle categorieën</a>
+
+	{#if images.length > 0}
 		<div class="gallery-grid">
-			{#each data.images as image}
+			{#each images as image (image._id)}
 				<button
 					class="gallery-item"
 					onclick={() => openLightbox(image)}
@@ -46,12 +60,7 @@
 			{/each}
 		</div>
 	{:else}
-		<div class="gallery-grid">
-			<img src="/images/foto1.jpg" alt="Keramiek werk" />
-			<img src="/images/foto2.jpg" alt="Keramiek werk" />
-			<img src="/images/foto3.jpg" alt="Keramiek werk" />
-			<img src="/images/foto4.jpg" alt="Keramiek werk" />
-		</div>
+		<p class="no-images">Er zijn nog geen foto's in deze categorie.</p>
 	{/if}
 </div>
 
@@ -74,13 +83,13 @@
 {/if}
 
 <style lang="scss">
-	@use '../../styles/variables' as *;
+	@use '../../../styles/variables' as *;
 
 	.page-header {
 		background: linear-gradient(135deg, $color-accent 0%, $color-secondary 100%);
 		padding: $spacing-2xl 0;
 		text-align: center;
-		margin-bottom: $spacing-3xl;
+		margin-bottom: $spacing-xl;
 	}
 
 	.page-header h1 {
@@ -90,6 +99,24 @@
 	.page-header p {
 		color: $color-text-light;
 		font-size: $font-size-large;
+	}
+
+	.back-link {
+		display: inline-block;
+		margin-bottom: $spacing-lg;
+		color: $color-primary-dark;
+		text-decoration: none;
+		font-weight: $font-weight-medium;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.no-images {
+		text-align: center;
+		color: $color-text-light;
+		padding: $spacing-2xl 0;
 	}
 
 	.gallery-grid {
@@ -171,4 +198,3 @@
 		cursor: default;
 	}
 </style>
-

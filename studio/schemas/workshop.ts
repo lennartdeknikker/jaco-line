@@ -42,7 +42,7 @@ export default defineType({
 		}),
 		defineField({
 			name: 'images',
-			title: "Extra afbeeldingen (galerij op detailpagina)",
+			title: "Extra afbeeldingen (foto's op detailpagina)",
 			type: 'array',
 			of: [
 				{

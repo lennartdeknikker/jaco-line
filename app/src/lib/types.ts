@@ -10,12 +10,26 @@ export interface Event {
 	_updatedAt: string;
 }
 
+export interface PhotoCategory {
+	_id: string;
+	name: string;
+	slug: { current: string };
+	description?: string | null;
+}
+
+/** Category as shown on the photo overview: one cover photo plus a photo count. */
+export interface PhotoCategoryCard extends PhotoCategory {
+	count: number;
+	coverUrl?: string | null;
+}
+
 export interface GalleryImage {
 	_id: string;
 	_type: 'gallery';
 	alt?: string;
 	image?: any; // Sanity image object
 	imageUrl?: string; // Formatted URL from urlFor helper
+	category?: PhotoCategory | null;
 	_createdAt: string;
 	_updatedAt: string;
 }

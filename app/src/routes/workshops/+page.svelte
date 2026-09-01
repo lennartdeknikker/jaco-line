@@ -132,7 +132,7 @@
 		<h1>Workshops</h1>
 		<p>{(data as any).pageHeaders?.workshopsIntro || 'Leer keramiek maken in een van mijn workshops'}</p>
 		<div class="page-header-cta">
-			<Button href="/contact" variant="secondary">Workshop op maat? Neem contact op</Button>
+			<Button href="/contact" variant="secondary">Stuur een mailtje!</Button>
 		</div>
 	</div>
 </div>
@@ -161,9 +161,10 @@
 							<div class="workshop-image-placeholder"></div>
 						{/if}
 					</a>
-					<div class="workshop-content">
+					<!-- <div class="workshop-content">
 						<div class="sessions-list">
 							<h3>Beschikbare data</h3>
+							{#if (w.sessions?.length ?? 0) > 0}
 							{#each w.sessions as session (session._id)}
 								{@const dateEnd = session.dateEnd}
 								{@const hasEnd = dateEnd && dateEnd !== session.date}
@@ -210,8 +211,12 @@
 									</div>
 								</div>
 							{/each}
+							{:else}
+								<p class="no-dates-message">Er zijn nog geen data gepland. Neem contact op voor een workshop op maat of op locatie.</p>
+								<Button href="/contact" variant="outline">Neem contact op</Button>
+							{/if}
 						</div>
-					</div>
+					</div> -->
 				</article>
 			{/each}
 		</div>
@@ -426,6 +431,11 @@
 		color: $color-text-light;
 	}
 
+	.no-dates-message {
+		color: $color-text-light;
+		margin: 0 0 $spacing-md 0;
+	}
+
 	.session-row {
 		display: flex;
 		gap: $spacing-lg;
@@ -597,9 +607,16 @@
 		}
 	}
 
+	.modal-content h2 {
+		// Keep a long title clear of the close button in the top-right corner, and small enough
+		// that it doesn't push the form itself off-screen on a phone.
+		padding-right: $spacing-2xl;
+		font-size: $font-size-h4;
+	}
+
 	.modal-session-date {
 		color: $color-text-light;
-		margin: -$spacing-sm 0 $spacing-md 0;
+		margin: $spacing-xs 0 $spacing-md 0;
 		font-size: $font-size-base;
 	}
 

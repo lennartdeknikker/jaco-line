@@ -35,14 +35,12 @@ export const GET: RequestHandler = async () => {
 		}`;
 		const workshopTypes = await sanityClient.fetch(query, { today });
 
-		// Only include workshop types that have at least one upcoming session
-		const withSessions = workshopTypes.filter((w: any) => w.sessions?.length > 0);
-
-		// Get subscription count and resolve isFull for each session
+		// Include all workshop types (also those without upcoming sessions)
 		const withCounts = await Promise.all(
-			withSessions.map(async (workshop: any) => {
+			workshopTypes.map(async (workshop: any) => {
+				const sessions = workshop.sessions ?? [];
 				const sessionsWithCounts = await Promise.all(
-					workshop.sessions.map(async (session: any) => {
+					sessions.map(async (session: any) => {
 						const subscriptionCount = await sanityClient.fetch(
 							`count(*[_type == "workshopSubscription" && workshopSession._ref == $sessionId])`,
 							{ sessionId: session._id }

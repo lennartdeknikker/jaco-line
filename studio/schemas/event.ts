@@ -1,8 +1,9 @@
 import { defineField, defineType } from 'sanity';
 
 export default defineType({
+	// Document type id stays 'event' so existing content and the site's queries keep working.
 	name: 'event',
-	title: 'Event',
+	title: 'Market',
 	type: 'document',
 	fields: [
 		defineField({
@@ -33,7 +34,7 @@ export default defineType({
 			title: 'Afbeelding',
 			type: 'image',
 			options: { hotspot: true },
-			description: 'Thumbnail voor op de evenementenpagina.',
+			description: 'Thumbnail voor op de marktenpagina.',
 		}),
 	],
 	preview: {

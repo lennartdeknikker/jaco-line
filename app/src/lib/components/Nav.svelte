@@ -33,26 +33,26 @@
 			<ul class="nav-links" class:open={mobileMenuOpen && mounted}>
 				<li>
 					<a
-						href="/evenementen"
-						class:active={$page.url.pathname === '/evenementen'}
-						onclick={closeMobileMenu}
-						>Evenementen</a
-					>
-				</li>
-				<li>
-					<a
-						href="/galerij"
-						class:active={$page.url.pathname === '/galerij'}
-						onclick={closeMobileMenu}
-						>Galerij</a
-					>
-				</li>
-				<li>
-					<a
 						href="/workshops"
 						class:active={$page.url.pathname === '/workshops'}
 						onclick={closeMobileMenu}
 						>Workshops</a
+					>
+				</li>
+				<li>
+					<a
+						href="/markten"
+						class:active={$page.url.pathname === '/markten'}
+						onclick={closeMobileMenu}
+						>Markten</a
+					>
+				</li>
+				<li>
+					<a
+						href="/fotos"
+						class:active={$page.url.pathname.startsWith('/fotos')}
+						onclick={closeMobileMenu}
+						>Foto's</a
 					>
 				</li>
 				<li>

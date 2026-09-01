@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import Button from '$lib/components/Button.svelte';
 	import Turnstile from '$lib/components/Turnstile.svelte';
 	import type { PageProps } from './$types';
@@ -6,10 +7,11 @@
 	const { data }: PageProps = $props();
 	const contactInfo = $derived(data.contactInfo);
 
+	// ?bericht= only seeds the field; from then on the message belongs to the visitor.
 	let formData = $state({
 		name: '',
 		email: '',
-		message: ''
+		message: untrack(() => data.prefillMessage) ?? ''
 	});
 
 	let submitting = $state(false);

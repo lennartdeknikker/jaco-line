@@ -14,7 +14,7 @@
 
 	const ogImage = $derived(`${data.origin}/android-chrome-512x512.png`);
 	const defaultTitle = 'JacoLine – Handgemaakt keramiek';
-	const defaultDescription = 'Ontdek handgemaakt keramiek van JacoLine. Workshops, evenementen en meer.';
+	const defaultDescription = 'Ontdek handgemaakt keramiek van JacoLine. Workshops, markten en meer.';
 </script>
 
 <svelte:head>

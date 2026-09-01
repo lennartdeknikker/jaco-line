@@ -78,7 +78,7 @@ export default defineType({
 			name: 'aboutSection',
 			title: 'Over mij (homepagina)',
 			type: 'object',
-			description: 'Optioneel blok boven "Komende evenementen" op de homepagina.',
+			description: 'Optioneel blok boven "Komende markten" op de homepagina.',
 			fields: [
 				defineField({
 					name: 'title',
@@ -116,13 +116,13 @@ export default defineType({
 					type: 'text',
 				}),
 				defineField({
-					name: 'evenementenIntro',
-					title: 'Evenementen – intro',
+					name: 'marktenIntro',
+					title: 'Markten – intro',
 					type: 'text',
 				}),
 				defineField({
 					name: 'galerijIntro',
-					title: 'Galerij – intro',
+					title: 'Foto\'s – intro',
 					type: 'text',
 				}),
 				defineField({

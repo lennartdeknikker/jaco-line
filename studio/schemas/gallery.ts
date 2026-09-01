@@ -1,8 +1,9 @@
 import { defineField, defineType } from 'sanity';
 
 export default defineType({
+	// Document type id stays 'gallery' so existing content and the site's queries keep working.
 	name: 'gallery',
-	title: 'Gallery',
+	title: 'Photos',
 	type: 'document',
 	fields: [
 		defineField({
@@ -18,6 +19,12 @@ export default defineType({
 				hotspot: true,
 			},
 			validation: (Rule) => Rule.required(),
+		}),
+		defineField({
+			name: 'category',
+			title: 'Category',
+			type: 'reference',
+			to: [{ type: 'photoCategory' }],
 		}),
 	],
 	preview: {

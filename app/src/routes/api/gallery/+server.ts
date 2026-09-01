@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { sanityClient, urlFor } from '$lib/sanity.server';
+import { sanityClient } from '$lib/sanity.server';
+import { cleanText } from '$lib/text';
 
 export const GET: RequestHandler = async ({ url }) => {
 	try {
@@ -22,6 +23,12 @@ export const GET: RequestHandler = async ({ url }) => {
 					}
 				}
 			},
+			category-> {
+				_id,
+				name,
+				slug,
+				description
+			},
 			_createdAt,
 			_updatedAt
 		}`;
@@ -30,7 +37,15 @@ export const GET: RequestHandler = async ({ url }) => {
 		// Format images with URLs
 		const formattedGallery = gallery.map((item: any) => ({
 			...item,
-			imageUrl: item.image?.asset?.url || null
+			alt: cleanText(item.alt),
+			imageUrl: item.image?.asset?.url || null,
+			category: item.category
+				? {
+						...item.category,
+						name: cleanText(item.category.name),
+						description: cleanText(item.category.description),
+					}
+				: null,
 		}));
 
 		return json(formattedGallery);

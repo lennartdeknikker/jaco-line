@@ -27,10 +27,11 @@
 				<h4>Navigatie</h4>
 				<ul>
 					<li><a href="/">Home</a></li>
-					<li><a href="/evenementen">Evenementen</a></li>
-					<li><a href="/galerij">Galerij</a></li>
 					<li><a href="/workshops">Workshops</a></li>
+					<li><a href="/markten">Markten</a></li>
+					<li><a href="/fotos">Foto's</a></li>
 					<li><a href="/contact">Contact</a></li>
+					<li><a href="/newsletter">Nieuwsbrief</a></li>
 				</ul>
 			</div>
 			<div class="footer-section footer-section-social">

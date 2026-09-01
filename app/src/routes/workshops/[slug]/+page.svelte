@@ -3,6 +3,7 @@
 	import type { WorkshopSession } from '$lib/types';
 	import Button from '$lib/components/Button.svelte';
 	import Turnstile from '$lib/components/Turnstile.svelte';
+	import { cleanText } from '$lib/text';
 
 	const { data }: PageProps = $props();
 
@@ -120,6 +121,14 @@
 	}
 
 	const workshop = $derived(data.workshop as WorkshopDetail | null);
+	// Links to the contact form with the message already filled in for this workshop. The title is
+	// cleaned first: Sanity's stega encoding hides characters in it that would bloat the URL.
+	const workshopTitle = $derived(cleanText(workshop?.title) ?? '');
+	const contactLink = (message: string) => `/contact?bericht=${encodeURIComponent(message)}`;
+	const contactHref = $derived(contactLink(`Ik wil graag meer informatie over ${workshopTitle}.`));
+	const planDateHref = $derived(
+		contactLink(`Ik wil graag een datum plannen voor ${workshopTitle}.`)
+	);
 	const galleryImages = $derived(workshop?.mainImageUrl
 		? [
 				{ url: workshop.mainImageUrl, alt: workshop.title },
@@ -166,6 +175,11 @@
 				<p>{workshop.description}</p>
 			</div>
 		{/if}
+
+		<div class="workshop-contact">
+			<p>Vragen, of een workshop plannen?</p>
+			<Button href={contactHref} variant="secondary">Stuur een mailtje!</Button>
+		</div>
 
 		{#if galleryImages.length > 0}
 			<div class="workshop-gallery">
@@ -234,7 +248,9 @@
 					{/each}
 				</div>
 			{:else}
-				<p class="no-sessions">Er zijn momenteel geen geplande data voor deze workshop.</p>
+				<div class="no-sessions-action">
+					<Button href={planDateHref} variant="primary">Samen een workshop plannen</Button>
+				</div>
 			{/if}
 		</div>
 	</div>
@@ -484,6 +500,25 @@
 		color: $color-text-light;
 	}
 
+	.no-sessions-action {
+		margin-top: $spacing-md;
+	}
+
+	.workshop-contact {
+		margin-top: $spacing-2xl;
+		margin-bottom: $spacing-3xl;
+		padding: $spacing-lg;
+		background: $color-background-alt;
+		border: 1px solid $color-border;
+		border-radius: $border-radius-lg;
+		text-align: center;
+
+		p {
+			margin-bottom: $spacing-md;
+			color: $color-text-light;
+		}
+	}
+
 	.not-found {
 		text-align: center;
 		padding: $spacing-3xl 0;
@@ -535,9 +570,16 @@
 		border-radius: $border-radius-full;
 	}
 
+	.modal-content h2 {
+		// Keep a long title clear of the close button in the top-right corner, and small enough
+		// that it doesn't push the form itself off-screen on a phone.
+		padding-right: $spacing-2xl;
+		font-size: $font-size-h4;
+	}
+
 	.modal-session-date {
 		color: $color-text-light;
-		margin: -$spacing-sm 0 $spacing-md 0;
+		margin: $spacing-xs 0 $spacing-md 0;
 	}
 
 	.workshop-form {

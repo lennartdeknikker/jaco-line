@@ -15,16 +15,16 @@
 </script>
 
 <svelte:head>
-	<title>Evenementen - JacoLine</title>
-	<meta name="description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en evenementen." />
-	<meta property="og:title" content="Evenementen - JacoLine" />
-	<meta property="og:description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en evenementen." />
+	<title>Markten - JacoLine</title>
+	<meta name="description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en markten." />
+	<meta property="og:title" content="Markten - JacoLine" />
+	<meta property="og:description" content="Bekijk waar je JacoLine kunt vinden op verschillende markten en markten." />
 </svelte:head>
 
 <div class="page-header">
 	<div class="container">
-		<h1>Evenementen</h1>
-		<p>{(data as any).pageHeaders?.evenementenIntro || 'Kom langs bij mijn marktkraam op deze evenementen'}</p>
+		<h1>Markten</h1>
+		<p>{(data as any).pageHeaders?.marktenIntro || 'Kom langs bij mijn marktkraam op deze markten'}</p>
 	</div>
 </div>
 
@@ -53,7 +53,7 @@
 		</div>
 	{:else}
 		<div class="empty-state">
-			<p>Er zijn momenteel geen geplande evenementen.</p>
+			<p>Er zijn momenteel geen geplande markten.</p>
 			<p>Binnenkort meer informatie!</p>
 		</div>
 	{/if}
