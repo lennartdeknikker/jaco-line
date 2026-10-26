@@ -10,6 +10,7 @@ export const load: LayoutServerLoad = async ({ locals: { sanity }, fetch, url })
 	let heroLogoImageUrl: string | null = null;
 	let pageHeaders: Record<string, string> | null = null;
 	let aboutSection: { title: string | null; text: string | null; imageUrl: string | null } | null = null;
+	let cloudflareAnalyticsToken: string | null = null;
 	try {
 		const response = await fetch('/api/site-settings');
 		if (response.ok) {
@@ -20,6 +21,7 @@ export const load: LayoutServerLoad = async ({ locals: { sanity }, fetch, url })
 			heroLogoImageUrl = settings?.heroLogoImageUrl ?? null;
 			pageHeaders = settings?.pageHeaders ?? null;
 			aboutSection = settings?.aboutSection ?? null;
+			cloudflareAnalyticsToken = settings?.cloudflareAnalyticsToken?.trim() || null;
 		}
 	} catch (error) {
 		console.error('Error loading site settings:', error);
@@ -34,6 +36,7 @@ export const load: LayoutServerLoad = async ({ locals: { sanity }, fetch, url })
 		heroLogoImageUrl,
 		pageHeaders,
 		aboutSection,
+		cloudflareAnalyticsToken,
 	};
 };
 

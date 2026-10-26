@@ -190,6 +190,12 @@ export default defineType({
 				},
 			],
 		}),
+		defineField({
+			name: 'cloudflareAnalyticsToken',
+			title: 'Cloudflare Web Analytics token',
+			type: 'string',
+			description: 'Plak hier het token dat je van Cloudflare Web Analytics krijgt (bv. "abc123…"). Laat leeg om analytics uit te schakelen.',
+		}),
 	],
 	preview: {
 		select: {

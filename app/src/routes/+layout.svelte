@@ -15,6 +15,7 @@
 	const ogImage = $derived(`${data.origin}/android-chrome-512x512.png`);
 	const defaultTitle = 'JacoLine – Handgemaakt keramiek';
 	const defaultDescription = 'Ontdek handgemaakt keramiek van JacoLine. Workshops, markten en meer.';
+	const cfAnalyticsToken = $derived(data.cloudflareAnalyticsToken);
 </script>
 
 <svelte:head>
@@ -28,6 +29,14 @@
 	<meta name="twitter:title" content={defaultTitle} />
 	<meta name="twitter:description" content={defaultDescription} />
 	<meta name="twitter:image" content={ogImage} />
+
+	{#if cfAnalyticsToken}
+		<script
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon={`{"token": "${cfAnalyticsToken}"}`}
+		></script>
+	{/if}
 </svelte:head>
 
 {#if mounted}
